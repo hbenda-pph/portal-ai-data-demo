@@ -75,20 +75,14 @@ def get_current_user(request: Request) -> Optional[Dict[str, Any]]:
     return None
 
 
-CORPORATE_PASSKEY = os.environ.get("CORPORATE_PASSKEY", "peach2026")
-
 class AuthVerifyRequest(BaseModel):
     email: Optional[str] = None
-    pass_: Optional[str] = None
     token: Optional[str] = None
-
-    class Config:
-        fields = {'pass_': 'pass'}
 
 
 @app.post("/api/auth/verify")
 async def verify_auth(payload: AuthVerifyRequest, response: Response):
-    """Verify Google ID Token, Corporate SSO Email or Passkey."""
+    """Verify Corporate SSO Email."""
     user_email = None
     user_name = "Corporate User"
 
@@ -103,18 +97,11 @@ async def verify_auth(payload: AuthVerifyRequest, response: Response):
         except Exception as e:
             return JSONResponse(
                 status_code=401,
-                content={"authorized": False, "message": f"Invalid Google Token: {str(e)}"}
+                content={"authorized": False, "message": f"Invalid Token: {str(e)}"}
             )
     elif payload.email:
         user_email = payload.email.strip().lower()
         user_name = user_email.split("@")[0].replace(".", " ").title()
-        
-        # Verify passcode if provided
-        if payload.pass_ and payload.pass_.strip() != CORPORATE_PASSKEY:
-            return JSONResponse(
-                status_code=403,
-                content={"authorized": False, "message": "Invalid access key or credentials."}
-            )
 
     if not user_email or not is_authorized_email(user_email):
         return JSONResponse(
