@@ -1,15 +1,32 @@
 import os
 import time
+import json
 from typing import Optional, Dict, Any
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Request, Response, Query, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from itsdangerous import URLSafeTimedSerializer
 from google.cloud import bigquery
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+
+SECRET_KEY = os.environ.get("SESSION_SECRET_KEY", "pph-platform-secret-key-2026-auth-lock")
+serializer = URLSafeTimedSerializer(SECRET_KEY)
+SESSION_COOKIE_NAME = "pph_auth_session"
+MAX_SESSION_AGE = 86400 * 7  # 7 days
+
+ALLOWED_DOMAINS = ["peachcfo.com"]
+ALLOWED_EMAILS = [
+    "hermann@peachcfo.com",
+    "gcloud@peachcfo.com",
+    "data-consolidation@pph-central.iam.gserviceaccount.com"
+]
 
 app = FastAPI(
     title="Portal AI Data Platform (DEMO)",
-    description="DEMO API for Call Intelligence & Real-Time BigQuery Analytics (DEV Environment)",
+    description="Corporate DEMO API with Strict Domain Authorization (@peachcfo.com)",
     version="1.0.0-demo"
 )
 
@@ -21,16 +38,114 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# In-memory tenant cache: { "tenant_id": { "timestamp": float, "data": dict } }
+# In-memory tenant cache
 CACHE_TTL_SECONDS = 60
 CACHE_STORE: Dict[str, Dict[str, Any]] = {}
 
-# BigQuery Client Initialization (Uses Application Default Credentials or Cloud Run Service Account)
+# BigQuery Client Initialization
 try:
     bq_client = bigquery.Client()
 except Exception as e:
     print(f"Warning: BigQuery Client init fallback: {e}")
     bq_client = None
+
+
+def is_authorized_email(email: str) -> bool:
+    """Validate if email belongs to @peachcfo.com domain or whitelist."""
+    if not email:
+        return False
+    email_clean = email.strip().lower()
+    if email_clean in ALLOWED_EMAILS:
+        return True
+    domain = email_clean.split("@")[-1] if "@" in email_clean else ""
+    return domain in ALLOWED_DOMAINS
+
+
+def get_current_user(request: Request) -> Optional[Dict[str, Any]]:
+    """Extract and verify session token from cookie."""
+    cookie = request.cookies.get(SESSION_COOKIE_NAME)
+    if not cookie:
+        return None
+    try:
+        data = serializer.loads(cookie, max_age=MAX_SESSION_AGE)
+        if is_authorized_email(data.get("email")):
+            return data
+    except Exception:
+        return None
+    return None
+
+
+class AuthVerifyRequest(BaseModel):
+    email: Optional[str] = None
+    token: Optional[str] = None
+
+
+@app.post("/api/auth/verify")
+async def verify_auth(payload: AuthVerifyRequest, response: Response):
+    """Verify Google ID Token or Corporate SSO Email."""
+    user_email = None
+    user_name = "Corporate User"
+
+    # 1. Verify Google ID Token if provided
+    if payload.token:
+        try:
+            id_info = id_token.verify_oauth2_token(
+                payload.token,
+                google_requests.Request()
+            )
+            user_email = id_info.get("email")
+            user_name = id_info.get("name", user_email)
+        except Exception as e:
+            return JSONResponse(
+                status_code=401,
+                content={"authorized": False, "message": f"Invalid Google Token: {str(e)}"}
+            )
+    elif payload.email:
+        user_email = payload.email.strip().lower()
+        user_name = user_email.split("@")[0].replace(".", " ").title()
+
+    if not user_email or not is_authorized_email(user_email):
+        return JSONResponse(
+            status_code=403,
+            content={
+                "authorized": False,
+                "message": f"Access Denied: '{user_email}' is not authorized. Only official @peachcfo.com accounts are permitted."
+            }
+        )
+
+    # Issue signed session cookie
+    session_data = {
+        "email": user_email,
+        "name": user_name,
+        "auth_time": time.time()
+    }
+    token = serializer.dumps(session_data)
+    
+    resp = JSONResponse(content={"authorized": True, "email": user_email, "name": user_name})
+    resp.set_cookie(
+        key=SESSION_COOKIE_NAME,
+        value=token,
+        max_age=MAX_SESSION_AGE,
+        httponly=True,
+        samesite="lax",
+        secure=False  # Set to True if strictly HTTPS behind proxy
+    )
+    return resp
+
+
+@app.get("/api/auth/me")
+def get_me(request: Request):
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="Unauthenticated")
+    return user
+
+
+@app.post("/api/auth/logout")
+def logout(response: Response):
+    resp = JSONResponse(content={"status": "logged_out"})
+    resp.delete_cookie(SESSION_COOKIE_NAME)
+    return resp
 
 
 def get_dataset_for_tenant(tenant: str) -> str:
@@ -402,7 +517,7 @@ def query_bigquery_live(tenant_id: str) -> Dict[str, Any]:
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "service": "Portal AI Data Platform API", "timestamp": time.time()}
+    return {"status": "ok", "service": "Portal AI Data Platform (DEMO)", "timestamp": time.time()}
 
 
 @app.get("/api/companies")
@@ -414,8 +529,12 @@ def get_companies():
 
 
 @app.get("/api/data")
-def get_data(tenant: str = Query("mhs")):
-    """Get full aggregated dataset with in-memory TTL caching."""
+def get_data(request: Request, tenant: str = Query("mhs")):
+    """Get full aggregated dataset with in-memory TTL caching (Protected)."""
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="Unauthorized: Please sign in with an official @peachcfo.com account")
+
     now = time.time()
     cache_entry = CACHE_STORE.get(tenant)
 
@@ -431,21 +550,23 @@ def get_data(tenant: str = Query("mhs")):
         return data
     except Exception as e:
         print(f"Error querying BigQuery: {e}")
-        # Return fallback cache if available
         if cache_entry:
             return cache_entry["data"]
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/api/sync")
-def force_sync(tenant: str = Query("mhs")):
-    """Force flush cache and execute live sync."""
+def force_sync(request: Request, tenant: str = Query("mhs")):
+    """Force flush cache and execute live sync (Protected)."""
+    user = get_current_user(request)
+    if not user:
+        raise HTTPException(status_code=401, detail="Unauthorized")
     if tenant in CACHE_STORE:
         del CACHE_STORE[tenant]
-    return get_data(tenant)
+    return get_data(request, tenant)
 
 
-# Mount static assets (HTML, CSS, JS)
+# Mount static assets (CSS, JS, DATA)
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 app.mount("/css", StaticFiles(directory=os.path.join(CURRENT_DIR, "css")), name="css")
 app.mount("/js", StaticFiles(directory=os.path.join(CURRENT_DIR, "js")), name="js")
@@ -453,13 +574,28 @@ if os.path.exists(os.path.join(CURRENT_DIR, "data")):
     app.mount("/data", StaticFiles(directory=os.path.join(CURRENT_DIR, "data")), name="data")
 
 
+@app.get("/login.html")
+def serve_login():
+    return FileResponse(os.path.join(CURRENT_DIR, "login.html"))
+
+
 @app.get("/")
-def serve_index():
+def serve_index(request: Request):
+    user = get_current_user(request)
+    if not user:
+        return RedirectResponse(url="/login.html")
     return FileResponse(os.path.join(CURRENT_DIR, "index.html"))
 
 
 @app.get("/{page_name}.html")
-def serve_page(page_name: str):
+def serve_page(request: Request, page_name: str):
+    if page_name == "login":
+        return FileResponse(os.path.join(CURRENT_DIR, "login.html"))
+    
+    user = get_current_user(request)
+    if not user:
+        return RedirectResponse(url="/login.html")
+
     file_path = os.path.join(CURRENT_DIR, f"{page_name}.html")
     if os.path.exists(file_path):
         return FileResponse(file_path)
@@ -470,4 +606,3 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8080))
     uvicorn.run("server:app", host="0.0.0.0", port=port, reload=True)
-

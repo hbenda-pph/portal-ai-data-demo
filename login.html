@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Login | Portal AI Data (DEMO)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 20%, rgba(59, 130, 246, 0.12) 0%, rgba(10, 15, 30, 0.98) 70%);
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-1, #f8fafc);
+    }
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+      padding: 24px;
+    }
+    .login-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 36px 32px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(59, 130, 246, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+    }
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 100px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #60a5fa;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+    }
+    .login-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 0 0 6px 0;
+      color: #f8fafc;
+    }
+    .login-sub {
+      font-size: 0.825rem;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin: 0 0 24px 0;
+    }
+    .auth-alert {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      margin-bottom: 20px;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+    .auth-alert.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+    .auth-alert.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #86efac;
+    }
+    .domain-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      border-radius: 4px;
+      font-family: 'DM Mono', monospace;
+      font-weight: 700;
+      color: #93c5fd;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: #64748b;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .footer-note {
+      font-size: 0.7rem;
+      color: #64748b;
+      text-align: center;
+      margin-top: 24px;
+      line-height: 1.5;
+    }
+    .g-btn-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 16px 0;
+    }
+    .lang-switcher {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 2px;
+    }
+    .lang-btn {
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .lang-btn.active {
+      background: #3b82f6;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <div class="login-card">
+    <div class="lang-switcher">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-es" onclick="setLang('es')">ES</button>
+    </div>
+
+    <div class="brand-icon">AI</div>
+    <div class="brand-badge">Platform Partners • DEV</div>
+
+    <h1 class="login-title" id="lbl-title">Corporate Sign-In</h1>
+    <p class="login-sub" id="lbl-sub">
+      Restricted executive platform. Only authorized accounts ending in <span class="domain-pill">@peachcfo.com</span> are permitted.
+    </p>
+
+    <!-- Error / Success Alert -->
+    <div id="alert-box" class="auth-alert"></div>
+
+    <!-- Google One-Tap / Sign-In Button Container -->
+    <div class="g-btn-wrap">
+      <div id="g_id_onload"
+           data-client_id="514633608081-3g8n1m9k2l1o.apps.googleusercontent.com"
+           data-context="signin"
+           data-ux_mode="popup"
+           data-callback="handleGoogleCredential"
+           data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+           data-type="standard"
+           data-shape="rectangular"
+           data-theme="filled_blue"
+           data-text="signin_with"
+           data-size="large"
+           data-logo_alignment="left"
+           data-width="320">
+      </div>
+    </div>
+
+    <!-- Direct Email Fallback for Workspace SSO -->
+    <div class="divider"><span id="lbl-or">or single sign-on</span></div>
+    
+    <form onsubmit="handleDirectLogin(event)" style="display:flex;flex-direction:column;gap:10px">
+      <input type="email" id="sso-email" placeholder="name@peachcfo.com" required
+             style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(15,23,42,0.8);color:#fff;font-size:0.85rem;box-sizing:border-box;outline:none;">
+      <button type="submit" id="btn-login"
+              style="width:100%;padding:10px 14px;border-radius:8px;border:none;background:linear-gradient(135deg, #2563eb, #1d4ed8);color:#fff;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.15s;">
+        Verify &amp; Continue
+      </button>
+    </form>
+
+    <div class="footer-note" id="lbl-footer">
+      🔒 Zero-Trust Security Protocol • SOC 2 &amp; HIPAA Compliant • Unauthorized access attempts are monitored and logged.
+    </div>
+  </div>
+</div>
+
+<script>
+let currentLang = 'en';
+
+const TEXTS = {
+  en: {
+    title: "Corporate Sign-In",
+    sub: "Restricted executive platform. Only authorized accounts ending in <span class='domain-pill'>@peachcfo.com</span> are permitted.",
+    or: "or single sign-on",
+    btn: "Verify & Continue",
+    footer: "🔒 Zero-Trust Security Protocol • SOC 2 & HIPAA Compliant • Unauthorized access attempts are monitored and logged.",
+    accessDenied: "⛔ <strong>Access Denied:</strong> Your account is not authorized. Only official <code>@peachcfo.com</code> accounts can access this portal.",
+    success: "✅ <strong>Identity Verified:</strong> Redirecting to Executive Portal..."
+  },
+  es: {
+    title: "Inicio de Sesión Corporativo",
+    sub: "Plataforma ejecutiva restringida. Solo se permiten cuentas autorizadas con dominio <span class='domain-pill'>@peachcfo.com</span>.",
+    or: "o autenticación directa",
+    btn: "Verificar y Continuar",
+    footer: "🔒 Protocolo de Seguridad Zero-Trust • Cumplimiento SOC 2 y HIPAA • Los accesos no autorizados son monitoreados y registrados.",
+    accessDenied: "⛔ <strong>Acceso Denegado:</strong> Tu cuenta no está autorizada. Solo cuentas oficiales <code>@peachcfo.com</code> pueden acceder a este portal.",
+    success: "✅ <strong>Identidad Verificada:</strong> Redirigiendo al Portal Ejecutivo..."
+  }
+};
+
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btn-en').className = 'lang-btn' + (lang === 'en' ? ' active' : '');
+  document.getElementById('btn-es').className = 'lang-btn' + (lang === 'es' ? ' active' : '');
+  document.getElementById('lbl-title').innerHTML = TEXTS[lang].title;
+  document.getElementById('lbl-sub').innerHTML = TEXTS[lang].sub;
+  document.getElementById('lbl-or').innerHTML = TEXTS[lang].or;
+  document.getElementById('btn-login').innerHTML = TEXTS[lang].btn;
+  document.getElementById('lbl-footer').innerHTML = TEXTS[lang].footer;
+}
+
+async function verifyEmailAuth(email, idToken = null) {
+  const alertBox = document.getElementById('alert-box');
+  alertBox.className = 'auth-alert';
+  alertBox.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/auth/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, token: idToken })
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.authorized) {
+      alertBox.className = 'auth-alert success';
+      alertBox.innerHTML = TEXTS[currentLang].success;
+      setTimeout(() => {
+        window.location.href = '/index.html';
+      }, 600);
+    } else {
+      alertBox.className = 'auth-alert error';
+      alertBox.innerHTML = data.message || TEXTS[currentLang].accessDenied;
+    }
+  } catch (err) {
+    alertBox.className = 'auth-alert error';
+    alertBox.innerHTML = "Authentication service error. Please try again.";
+  }
+}
+
+function handleDirectLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('sso-email').value.trim();
+  verifyEmailAuth(email);
+}
+
+function handleGoogleCredential(response) {
+  if (response.credential) {
+    verifyEmailAuth(null, response.credential);
+  }
+}
+</script>
+
+</body>
+</html>
+

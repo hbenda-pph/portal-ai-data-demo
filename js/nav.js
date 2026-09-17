@@ -1,5 +1,5 @@
 /**
- * nav.js — Sidebar & Topbar (generados dinámicamente con soporte i18n EN / ES)
+ * nav.js — Sidebar & Topbar (generados dinámicamente con soporte i18n EN / ES y Auth)
  * Portal AI Data | Platform Partners
  */
 
@@ -125,8 +125,30 @@ function buildTopbar() {
     <div class="topbar-right">
       <span class="demo-tag">DEMO</span>
       <span class="topbar-date">${date}</span>
-      <div class="avatar" title="Hermann B.">HB</div>
+      <div class="avatar" id="user-avatar" title="PeachCFO User" onclick="handleLogout()" style="cursor:pointer">HB</div>
     </div>`;
+}
+
+async function handleLogout() {
+  if (confirm("Log out of Portal AI Data?")) {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    window.location.href = '/login.html';
+  }
+}
+
+async function checkUserIdentity() {
+  try {
+    const res = await fetch('/api/auth/me');
+    if (res.ok) {
+      const user = await res.json();
+      const av = document.getElementById('user-avatar');
+      if (av && user.email) {
+        av.title = `${user.name || user.email} (Click to Logout)`;
+        const initials = (user.name || user.email).substring(0,2).toUpperCase();
+        av.innerText = initials;
+      }
+    }
+  } catch(e) {}
 }
 
 /* ── Init on DOM ready ── */
@@ -138,5 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
     tb.className = 'topbar';  
     tb.innerHTML = buildTopbar(); 
     if (window.I18n) window.I18n.injectLanguageSelector();
+    checkUserIdentity();
   }
 });

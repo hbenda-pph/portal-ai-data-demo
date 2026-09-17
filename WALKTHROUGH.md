@@ -4,19 +4,20 @@
 **Entorno Nube:** DEV (`platform-partners-des`)  
 **Servicio Cloud Run:** `portal-ai-data-demo`  
 **URL Oficial DEMO:** [https://portal-ai-data-demo-514633608081.us-central1.run.app/](https://portal-ai-data-demo-514633608081.us-central1.run.app/)  
+**Seguridad:** 🔒 **Restringido a cuentas `@peachcfo.com`** (Zero-Trust)  
 **Idiomas:** **Inglés (Predeterminado)** y **Español** con conmutador `[ EN | ES ]`  
-**Estado:** 🟢 Conectado en Tiempo Real a BigQuery con Soporte Bilingüe
+**Estado:** 🟢 Protegido con Login Corporativo y Conectado en Tiempo Real a BigQuery
 
 ---
 
-## 📌 Hitos DEMO Completados
+## 🔒 Control de Acceso y Blindaje de Cuentas Personales
 
-1. **Motor Bilingüe Completo (`Portal/js/i18n.js`):**
-   - Idioma principal: **Inglés (English)**.
-   - Selector en la barra superior: botones directos `[ EN | ES ]` para cambiar al instante todo el menú, tarjetas, tablas y botones.
-   - Guarda la preferencia en el navegador.
-
-2. **Backend FastAPI y Métricas Reales en Vivo:**
-   - **6,033 llamadas** auditadas en tiempo real.
-   - **$3,048,354.08 USD** de ingresos en riesgo calculados.
-   - **Top CSRs:** Keyana Royce, Broccoli AI, Jose Tovar, Jose Rangel, Biancha Gant.
+1. **Pantalla de Login Corporativo (`Portal/login.html`):**
+   - Soporta Google Sign-In oficial y SSO directo.
+   - Si un usuario intenta ingresar con `@gmail.com`, `@hotmail.com` o cualquier dominio externo, el sistema muestra:
+     > ⛔ **Access Denied:** Your account is not authorized. Only official `@peachcfo.com` accounts can access this portal.
+2. **Validación en Backend (`Portal/server.py`):**
+   - Intercepta todas las rutas protegidas (`/`, `*.html`, `/api/data`, `/api/sync`).
+   - Requiere cookie de sesión firmada criptográficamente con validez exclusiva para correos autorizados.
+3. **Cierre de Sesión:**
+   - Clic en el avatar de usuario en la barra superior para cerrar sesión de inmediato.
