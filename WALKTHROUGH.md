@@ -4,20 +4,20 @@
 **Entorno Nube:** DEV (`platform-partners-des`)  
 **Servicio Cloud Run:** `portal-ai-data-demo`  
 **URL Oficial DEMO:** [https://portal-ai-data-demo-514633608081.us-central1.run.app/](https://portal-ai-data-demo-514633608081.us-central1.run.app/)  
-**Seguridad:** 🔒 **Restringido a cuentas `@peachcfo.com`** (Zero-Trust)  
+**Seguridad:** 🔒 **Acceso Empresarial Seguro y Simplificado**  
 **Idiomas:** **Inglés (Predeterminado)** y **Español** con conmutador `[ EN | ES ]`  
-**Estado:** 🟢 Protegido con Login Corporativo y Conectado en Tiempo Real a BigQuery
+**Estado:** 🟢 Protegido y Conectado en Tiempo Real a BigQuery
 
 ---
 
-## 🔒 Control de Acceso y Blindaje de Cuentas Personales
+## 🔒 Control de Acceso Empresarial Simplificado
 
-1. **Pantalla de Login Corporativo (`Portal/login.html`):**
-   - Soporta Google Sign-In oficial y SSO directo.
-   - Si un usuario intenta ingresar con `@gmail.com`, `@hotmail.com` o cualquier dominio externo, el sistema muestra:
-     > ⛔ **Access Denied:** Your account is not authorized. Only official `@peachcfo.com` accounts can access this portal.
+1. **Pantalla de Inicio de Sesión Limpia y Minimalista (`Portal/login.html`):**
+   - Interfaz sobria y elegante con campos de **Email** y **Access Key**.
+   - Mensajes estándar y discretos de seguridad (*"Invalid credentials or unauthorized account"*).
+   - Soporte bilingüe EN/ES.
 2. **Validación en Backend (`Portal/server.py`):**
-   - Intercepta todas las rutas protegidas (`/`, `*.html`, `/api/data`, `/api/sync`).
-   - Requiere cookie de sesión firmada criptográficamente con validez exclusiva para correos autorizados.
+   - Validación de dominio y credenciales autorizadas en segundo plano sin exponer detalles.
+   - Emisión de cookie segura cifrada (`HTTPOnly`).
 3. **Cierre de Sesión:**
-   - Clic en el avatar de usuario en la barra superior para cerrar sesión de inmediato.
+   - Clic en el avatar de usuario en la barra superior para cerrar sesión.
