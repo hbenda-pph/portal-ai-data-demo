@@ -1,52 +1,54 @@
 /**
- * nav.js — Sidebar & Topbar (generados dinámicamente)
+ * nav.js — Sidebar & Topbar (generados dinámicamente con soporte i18n EN / ES)
  * Portal AI Data | Platform Partners
- * Edita NAV_PAGES para agregar/quitar secciones.
  */
 
-const NAV_PAGES = [
-  {
-    group: null,
-    items: [
-      { id:'home', href:'index.html', num:'00', label:'Portada', badge:'KPIs', icon:'home' },
-    ]
-  },
-  {
-    group: 'ANÁLISIS',
-    items: [
-      { id:'embudo',   href:'embudo.html',   num:'01', label:'Embudo Económico', icon:'funnel' },
-      { id:'llamadas', href:'llamadas.html', num:'02', label:'Llamadas & CSR',   icon:'phone' },
-    ]
-  },
-  {
-    group: 'OPERACIONES',
-    items: [
-      { id:'operaciones', href:'operaciones.html', num:'03', label:'Operaciones & Técnicos', icon:'wrench' },
-    ]
-  },
-  {
-    group: 'CRECIMIENTO',
-    items: [
-      { id:'marketing', href:'marketing.html', num:'04', label:'Marketing & Atribución', icon:'chart' },
-      { id:'finanzas',  href:'finanzas.html',  num:'05', label:'Finanzas (QBO)',          icon:'dollar' },
-      { id:'clientes',  href:'clientes.html',  num:'06', label:'Clientes & LTV',          icon:'users' },
-    ]
-  },
-  {
-    group: 'INTELIGENCIA',
-    items: [
-      { id:'investigaciones', href:'investigaciones.html', num:'07', label:'Investigaciones',  icon:'search' },
-      { id:'alertas',         href:'alertas.html',         num:'08', label:'Alertas & Acción', icon:'bell' },
-      { id:'chat',            href:'chat.html',            num:'09', label:'Agente Chat',      icon:'chat' },
-    ]
-  },
-  {
-    group: 'SISTEMA',
-    items: [
-      { id:'sistema', href:'sistema.html', num:'⚙', label:'Salud del Sistema', icon:'activity' },
-    ]
-  },
-];
+function getNavPages() {
+  const t = (k) => (window.I18n ? window.I18n.t(k) : k);
+  return [
+    {
+      group: null,
+      items: [
+        { id:'home', href:'index.html', num:'00', label: t('nav_home'), badge:'KPIs', icon:'home' },
+      ]
+    },
+    {
+      group: t('group_analysis'),
+      items: [
+        { id:'embudo',   href:'embudo.html',   num:'01', label: t('nav_funnel'), icon:'funnel' },
+        { id:'llamadas', href:'llamadas.html', num:'02', label: t('nav_calls'),   icon:'phone' },
+      ]
+    },
+    {
+      group: t('group_operations'),
+      items: [
+        { id:'operaciones', href:'operaciones.html', num:'03', label: t('nav_ops'), icon:'wrench' },
+      ]
+    },
+    {
+      group: t('group_growth'),
+      items: [
+        { id:'marketing', href:'marketing.html', num:'04', label: t('nav_marketing'), icon:'chart' },
+        { id:'finanzas',  href:'finanzas.html',  num:'05', label: t('nav_finance'),   icon:'dollar' },
+        { id:'clientes',  href:'clientes.html',  num:'06', label: t('nav_customers'), icon:'users' },
+      ]
+    },
+    {
+      group: t('group_intelligence'),
+      items: [
+        { id:'investigaciones', href:'investigaciones.html', num:'07', label: t('nav_investigations'), icon:'search' },
+        { id:'alertas',         href:'alertas.html',         num:'08', label: t('nav_alerts'),         icon:'bell' },
+        { id:'chat',            href:'chat.html',            num:'09', label: t('nav_chat'),           icon:'chat' },
+      ]
+    },
+    {
+      group: t('group_system'),
+      items: [
+        { id:'sistema', href:'sistema.html', num:'⚙', label: t('nav_system'), icon:'activity' },
+      ]
+    },
+  ];
+}
 
 /* ── SVG Icons ── */
 const ICONS = {
@@ -66,6 +68,9 @@ const ICONS = {
 /* ── Build Sidebar HTML ── */
 function buildSidebar() {
   const cur = (location.pathname.split('/').pop() || 'index.html');
+  const t = (k) => (window.I18n ? window.I18n.t(k) : k);
+  const pages = getNavPages();
+
   let html = `
     <div class="sidebar-brand">
       <div class="sidebar-brand-icon">AI</div>
@@ -76,7 +81,7 @@ function buildSidebar() {
     </div>
     <nav class="sidebar-nav">`;
 
-  NAV_PAGES.forEach(group => {
+  pages.forEach(group => {
     if (group.group) html += `<div class="nav-group-label">${group.group}</div>`;
     group.items.forEach(item => {
       const active = (cur === item.href || (cur === '' && item.href === 'index.html')) ? ' active' : '';
@@ -95,7 +100,7 @@ function buildSidebar() {
     <div class="sidebar-footer">
       <div class="data-freshness">
         <span class="dot dot-green"></span>
-        <span>Demo · Sep 2026</span>
+        <span>${t('freshness')}</span>
       </div>
     </div>`;
   return html;
@@ -108,7 +113,8 @@ function buildTopbar() {
   const title  = meta?.content || document.title.split('|')[0].trim();
   const section= secMeta?.content || '';
   const now    = new Date();
-  const date   = now.toLocaleDateString('es-MX', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
+  const lang   = window.I18n ? window.I18n.currentLang : 'en';
+  const date   = now.toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
 
   const crumb  = section
     ? `<span>Portal AI Data</span><span class="sep">›</span><span>${section}</span><span class="sep">›</span><span class="crumb-cur">${title}</span>`
@@ -128,5 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const sb = document.getElementById('sidebar');
   const tb = document.getElementById('topbar');
   if (sb) { sb.className = 'sidebar'; sb.innerHTML = buildSidebar(); }
-  if (tb) { tb.className = 'topbar';  tb.innerHTML = buildTopbar(); }
+  if (tb) { 
+    tb.className = 'topbar';  
+    tb.innerHTML = buildTopbar(); 
+    if (window.I18n) window.I18n.injectLanguageSelector();
+  }
 });

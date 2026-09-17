@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="page-title" content="Portada">
-  <title>Portada | Portal AI Data</title>
+  <meta name="page-title" content="Executive Overview">
+  <title>Executive Overview | Portal AI Data (DEMO)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css">
@@ -26,7 +26,7 @@
 
     .kpi-row { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px; }
 
-    /* Impact card - la grande */
+    /* Impact card */
     .impact-card {
       background: linear-gradient(135deg, rgba(239,68,68,0.12) 0%, rgba(139,92,246,0.08) 100%);
       border: 1px solid rgba(239,68,68,0.25);
@@ -88,10 +88,10 @@
     <!-- Header -->
     <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:20px">
       <div>
-        <h1>Portada — Impacto y KPIs Principales</h1>
-        <p class="page-desc" id="page-desc">Monarch Home Services &bull; Muestra auditada &bull; Cargando datos...</p>
+        <h1 data-i18n="page_title_home">Executive Overview — Key Impact & KPIs</h1>
+        <p class="page-desc" id="page-desc">Monarch Home Services &bull; Audited Sample &bull; Loading data...</p>
       </div>
-      <span class="data-source-tag"><span class="pulse"></span><span id="data-source">Cargando...</span></span>shape-mhs-1 &bull; gold.fc_call_intelligence &bull; Gemini 2.5 Flash</span>
+      <span class="data-source-tag"><span class="pulse"></span><span id="data-source">Connecting...</span></span>
     </div>
 
     <!-- IMPACTO PRINCIPAL + KPIs fila 1 -->
@@ -99,24 +99,24 @@
 
       <!-- Impacto -->
       <div class="impact-card">
-        <div class="impact-label">Dinero Real en Riesgo</div>
+        <div class="impact-label" data-i18n="kpi_revenue_at_risk">Revenue at Risk</div>
         <div class="impact-value" id="kpi-revenue-risk">...</div>
-        <div class="impact-sub" style="margin-bottom:10px">Revenue no capturado &mdash; <strong>100% verificado</strong> contra estimados y facturas reales en ServiceTitan</div>
+        <div class="impact-sub" style="margin-bottom:10px" data-i18n="kpi_revenue_at_risk_sub">Uncaptured revenue &mdash; 100% verified against open ServiceTitan estimates & invoice benchmarks</div>
         <div style="display:flex;flex-direction:column;gap:5px">
           <div style="display:flex;justify-content:space-between;font-size:0.725rem">
-            <span style="color:var(--text-3)">Via presupuestos abiertos (<span id="kpi-open-est-pct">...</span>)</span>
+            <span style="color:var(--text-3)">Via open estimates (<span id="kpi-open-est-pct">...</span>)</span>
             <span style="color:var(--purple);font-family:'DM Mono',monospace" id="kpi-open-est">...</span>
           </div>
           <div class="progress" style="margin-bottom:4px"><div class="progress-fill purple" id="bar-open-est" style="width:0%"></div></div>
           <div style="display:flex;justify-content:space-between;font-size:0.725rem">
-            <span style="color:var(--text-3)">Via benchmarks Monarch (<span id="kpi-bench-pct">...</span>)</span>
+            <span style="color:var(--text-3)">Via invoice benchmarks (<span id="kpi-bench-pct">...</span>)</span>
             <span style="color:var(--accent);font-family:'DM Mono',monospace" id="kpi-bench">...</span>
           </div>
           <div class="progress"><div class="progress-fill blue" id="bar-bench" style="width:0%"></div></div>
         </div>
         <div style="margin-top:12px">
           <a href="llamadas.html" style="display:inline-flex;align-items:center;gap:5px;font-size:0.725rem;color:var(--accent);font-weight:600">
-            Ver detalle completo &rarr;
+            <span data-i18n="btn_view_audio">View Call Intelligence</span> &rarr;
           </a>
         </div>
       </div>
@@ -124,45 +124,45 @@
       <!-- KPI row 1 (3 columnas) -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
         <div class="kpi-card blue">
-          <div class="kpi-label">Llamadas Analizadas</div>
+          <div class="kpi-label" data-i18n="kpi_total_calls">Total Audited Calls</div>
           <div class="kpi-value" id="kpi-calls">...</div>
           <div class="kpi-footer">
-            <span class="kpi-vs">Muestra auditada 1:1 con ST</span>
+            <span class="kpi-vs" data-i18n="kpi_total_calls_sub">100% Multimodal Transcribed</span>
           </div>
         </div>
         <div class="kpi-card green">
-          <div class="kpi-label">Tasa de Cierre (Booking Rate)</div>
+          <div class="kpi-label" data-i18n="kpi_booking_rate">Booking Conversion Rate</div>
           <div class="kpi-value" id="kpi-booking-rate">...</div>
           <div class="kpi-footer">
-            <span style="color:var(--green);font-weight:700;font-size:0.75rem"><span id="kpi-booked">...</span> jobs agendados</span>
+            <span style="color:var(--green);font-weight:700;font-size:0.75rem"><span id="kpi-booked">...</span> booked jobs</span>
           </div>
         </div>
         <div class="kpi-card amber">
-          <div class="kpi-label">Oportunidades Perdidas</div>
+          <div class="kpi-label" data-i18n="kpi_lost_opps">Lost Opportunities</div>
           <div class="kpi-value"><span id="kpi-lost">...</span> <span style="font-size:1rem;font-weight:500;color:var(--amber)">(<span id="kpi-lost-pct">...</span>)</span></div>
           <div class="kpi-footer">
-            <span class="kpi-vs">Lost-bookable recuperables</span>
+            <span class="kpi-vs" data-i18n="kpi_lost_opps_sub">High recoverable potential</span>
           </div>
         </div>
         <div class="kpi-card blue">
-          <div class="kpi-label">Llamadas con Estimado Abierto</div>
+          <div class="kpi-label">Calls with Open Estimates</div>
           <div class="kpi-value" style="font-size:1.5rem" id="kpi-open-count">...</div>
           <div class="kpi-footer">
-            <span style="color:var(--purple);font-weight:700;font-size:0.75rem">$<span id="kpi-open-est-sub">...</span>K verificados en ST</span>
+            <span style="color:var(--purple);font-weight:700;font-size:0.75rem">$<span id="kpi-open-est-sub">...</span>K verified in ST</span>
           </div>
         </div>
         <div class="kpi-card amber">
-          <div class="kpi-label">Sentimiento Promedio</div>
+          <div class="kpi-label" data-i18n="kpi_sentiment">Customer Sentiment</div>
           <div class="kpi-value" style="font-size:1.5rem" id="kpi-sentiment">...</div>
           <div class="kpi-footer">
-            <span class="kpi-vs">Escala -1.0 a +1.0 &mdash; Neutral</span>
+            <span class="kpi-vs" data-i18n="kpi_sentiment_sub">Scale -1.0 to +1.0 &bull; NLP Polarity</span>
           </div>
         </div>
         <div class="kpi-card" style="border-color:rgba(245,158,11,0.25)">
-          <div class="kpi-label">Calificacion Manejo CSR</div>
+          <div class="kpi-label" data-i18n="kpi_csr_score">CSR Handling Score</div>
           <div class="kpi-value" style="font-size:1.5rem;color:var(--amber)"><span id="kpi-csr-score">...</span> <span style="font-size:0.85rem;color:var(--text-3);font-weight:400">/ 5.0</span></div>
           <div class="kpi-footer">
-            <span class="kpi-vs">Oportunidad de coaching</span>
+            <span class="kpi-vs" data-i18n="kpi_csr_score_sub">AI Rubric Protocol</span>
           </div>
         </div>
       </div>
@@ -174,127 +174,119 @@
       <!-- Causa Raiz -->
       <div class="card">
         <div class="card-header">
-          <span class="card-title">Causa Raiz de Perdida</span>
-          <span class="data-source-tag" style="font-size:0.57rem"><span class="pulse"></span>Query 02</span>
+          <span class="card-title" data-i18n="section_causes">Root Cause Analysis</span>
+          <span class="data-source-tag" style="font-size:0.57rem"><span class="pulse"></span>BigQuery</span>
         </div>
         <div id="render-causes"></div>
         <div style="margin-top:10px">
-          <a href="llamadas.html" style="font-size:0.7rem;color:var(--accent);font-weight:600">Ver Inteligencia de Llamadas &rarr;</a>
+          <a href="llamadas.html" style="font-size:0.7rem;color:var(--accent);font-weight:600"><span data-i18n="btn_view_audio">View Call Intelligence</span> &rarr;</a>
         </div>
       </div>
 
       <!-- Funnel de llamadas -->
       <div class="card">
         <div class="card-header">
-          <span class="card-title">Embudo de la Muestra</span>
-          <span class="data-source-tag" style="font-size:0.57rem"><span class="pulse"></span><span id="kpi-funnel-calls">...</span> llamadas</span>
+          <span class="card-title" data-i18n="section_funnel">Operational Conversion Funnel</span>
+          <span class="data-source-tag" style="font-size:0.57rem"><span class="pulse"></span><span id="kpi-funnel-calls">...</span> calls</span>
         </div>
         <div id="render-funnel"></div>
         <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-1)">
           <div style="display:flex;justify-content:space-between;font-size:0.725rem;color:var(--text-3)">
-            <span>Revenue potencial recuperable</span>
+            <span data-i18n="kpi_revenue_at_risk">Recoverable Revenue Potential</span>
             <span style="color:var(--red);font-family:'DM Mono',monospace;font-weight:700" id="kpi-funnel-risk">...</span>
           </div>
         </div>
       </div>
 
-      <!-- Action Motor 1 -->
+      <!-- Ranking CSR -->
       <div class="card">
         <div class="card-header">
-          <span class="card-title">Action Motor 1 — Cola Outbound</span>
-          <span class="data-source-tag" style="font-size:0.57rem"><span class="pulse"></span>Query 03</span>
+          <span class="card-title" data-i18n="section_csr_ranking">Top CSR Performance</span>
+          <a href="llamadas.html" style="font-size:0.7rem;color:var(--accent);font-weight:600">Ver todos &rarr;</a>
         </div>
-        <div class="alert alert-critical" style="margin-bottom:10px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          <div class="alert-content">
-            <div class="alert-title">Accion inmediata requerida</div>
-            <div class="alert-body"><span id="kpi-alert-risk">...</span> verificado. Prioridad: llamar a P1 esta semana.</div>
+        <table class="table-compact" style="width:100%">
+          <thead>
+            <tr>
+              <th data-i18n="col_agent_name">Agent</th>
+              <th style="text-align:right" data-i18n="col_conversion_rate">Conv. %</th>
+              <th style="text-align:right" data-i18n="col_revenue_impact">Risk USD</th>
+            </tr>
+          </thead>
+          <tbody id="render-csr"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ACTION MOTOR 1 - COLA DE RECUPERACION -->
+    <div class="card" style="margin-bottom:18px">
+      <div class="card-header" style="flex-wrap:wrap;gap:10px">
+        <div>
+          <span class="card-title" data-i18n="section_action_motor">⚡ Action Motor 1 — Immediate Revenue Recovery Queue</span>
+          <div style="font-size:0.725rem;color:var(--text-3);margin-top:2px" data-i18n="section_action_motor_sub">
+            Real-time prioritized opportunities with direct customer quotes and actionable recovery playbooks.
           </div>
         </div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr>
-              <th>P</th><th>Cliente</th><th>Servicio</th><th class="r">Monto</th>
-            </tr></thead>
-            <tbody id="render-csr"></tbody>
-          </table>
-        </div>
-        <div style="margin-top:10px">
-          <a href="llamadas.html" style="font-size:0.7rem;color:var(--accent);font-weight:600">Ver cola completa &rarr;</a>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="badge badge-red" data-i18n="badge_high_priority">High Priority P1</span>
+          <a href="llamadas.html" class="btn btn-secondary btn-sm" data-i18n="btn_view_audio">View All Calls &rarr;</a>
         </div>
       </div>
-    </div>
-
-    <!-- Acceso Rapido a secciones -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Acceso Rapido — Secciones del Portal</span>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
-        <a href="llamadas.html" class="quick-card">
-          <div class="quick-card-icon" style="color:var(--cyan);background:var(--cyan-muted)">02</div>
-          <div><div class="quick-card-num">SECCION 02</div><div class="quick-card-name">Llamadas &amp; CSR</div><div class="quick-card-desc"><span id="kpi-quick-calls">...</span> auditadas &bull; <span id="kpi-quick-risk">...</span> riesgo</div></div>
-          <div class="quick-card-arrow">&rsaquo;</div>
-        </a>
-        <a href="embudo.html" class="quick-card">
-          <div class="quick-card-icon" style="color:var(--accent);background:var(--accent-muted)">01</div>
-          <div><div class="quick-card-num">SECCION 01</div><div class="quick-card-name">Embudo Economico</div><div class="quick-card-desc">Flujo completo Marketing&rarr;LTV</div></div>
-          <div class="quick-card-arrow">&rsaquo;</div>
-        </a>
-        <a href="marketing.html" class="quick-card">
-          <div class="quick-card-icon" style="color:var(--green);background:var(--green-muted)">04</div>
-          <div><div class="quick-card-num">SECCION 04</div><div class="quick-card-name">Marketing</div><div class="quick-card-desc">ROI por fuente</div></div>
-          <div class="quick-card-arrow">&rsaquo;</div>
-        </a>
-        <a href="finanzas.html" class="quick-card">
-          <div class="quick-card-icon" style="color:var(--amber);background:var(--amber-muted)">05</div>
-          <div><div class="quick-card-num">SECCION 05</div><div class="quick-card-name">Finanzas (QBO)</div><div class="quick-card-desc">P&amp;L integrado</div></div>
-          <div class="quick-card-arrow">&rsaquo;</div>
-        </a>
-        <a href="alertas.html" class="quick-card">
-          <div class="quick-card-icon" style="color:var(--red);background:var(--red-muted)">08</div>
-          <div><div class="quick-card-num">SECCION 08</div><div class="quick-card-name">Alertas &amp; Accion</div><div class="quick-card-desc">Cola de recuperacion</div></div>
-          <div class="quick-card-arrow">&rsaquo;</div>
-        </a>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div style="text-align:center;padding:20px 0 8px;font-size:0.675rem;color:var(--text-3);border-top:1px solid var(--border-1);margin-top:6px">
-      Google Cloud BigQuery Lakehouse &bull; Proyecto: <span style="font-family:'DM Mono',monospace;color:var(--cyan)">shape-mhs-1</span> &bull; Modelo: Gemini 2.5 Flash &bull; Fuente: ServiceTitan API &bull; Sep 11, 2026
+      <table class="data-table" style="width:100%">
+        <thead>
+          <tr>
+            <th data-i18n="col_priority">Priority</th>
+            <th data-i18n="col_customer">Customer & Agent</th>
+            <th data-i18n="col_lost_reason">Root Cause</th>
+            <th class="r" data-i18n="col_risk_usd">Est. Value</th>
+          </tr>
+        </thead>
+        <tbody id="render-queue"></tbody>
+      </table>
     </div>
 
   </main>
 </div>
 
-<script src="js/data.js"></script>
+<!-- SCRIPTS -->
+<script src="js/i18n.js"></script>
 <script src="data/monarch.js"></script>
 <script src="data/demo.js"></script>
 <script src="js/data-engine.js"></script>
 <script>
-document.addEventListener('dataLoaded', (e) => {
-  const d = e.detail.data;
-  const fmtMoney = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
-  const fmtNum = (val) => new Intl.NumberFormat('en-US').format(val);
-  const fmtPct = (val) => val + '%';
-  
-  const el = (id) => document.getElementById(id);
-  if(!el('page-desc')) return;
-  
-  el('page-desc').innerHTML = `${d.companyName} &bull; ${d.meta.period} &bull; ${d.meta.note} &bull; ${d.kpis.totalCalls} llamadas reconciliadas`;
-  el('data-source').innerText = d.meta.source;
-  
-  el('kpi-revenue-risk').innerHTML = fmtMoney(d.kpis.revenueAtRisk).replace('$', '$').replace(/,\d{3}$/, '<span>K</span>');
+function fmtMoney(n) {
+  if (!n && n !== 0) return '$0';
+  return '$' + Math.round(n).toLocaleString('en-US');
+}
+function fmtNum(n) {
+  if (!n && n !== 0) return '0';
+  return n.toLocaleString('en-US');
+}
+function fmtPct(n) {
+  if (!n && n !== 0) return '0%';
+  return n.toFixed(1) + '%';
+}
+
+function el(id) { return document.getElementById(id); }
+
+function renderDataset(d) {
+  if (!d || !d.kpis) return;
+  const t = (k) => (window.I18n ? window.I18n.t(k) : k);
+
+  if (el('page-desc')) el('page-desc').innerText = `${d.companyName} • ${d.meta.period} • ${d.meta.note}`;
+  if (el('data-source')) el('data-source').innerText = d.meta.source;
+
+  el('kpi-revenue-risk').innerHTML = fmtMoney(d.kpis.revenueAtRisk) + '<span> USD</span>';
   el('kpi-open-est').innerText = fmtMoney(d.kpis.backedByOpenEstimates);
   el('kpi-bench').innerText = fmtMoney(d.kpis.backedByInvoiceBenchmarks);
   
-  const pctOpen = (d.kpis.backedByOpenEstimates / d.kpis.revenueAtRisk * 100).toFixed(1) + '%';
-  const pctBench = (d.kpis.backedByInvoiceBenchmarks / d.kpis.revenueAtRisk * 100).toFixed(1) + '%';
-  el('kpi-open-est-pct').innerText = pctOpen;
-  el('bar-open-est').style.width = pctOpen;
-  el('kpi-bench-pct').innerText = pctBench;
-  el('bar-bench').style.width = pctBench;
-  
+  const totalRisk = d.kpis.revenueAtRisk || 1;
+  const openEstPct = ((d.kpis.backedByOpenEstimates / totalRisk) * 100).toFixed(0) + '%';
+  const benchPct = ((d.kpis.backedByInvoiceBenchmarks / totalRisk) * 100).toFixed(0) + '%';
+  el('kpi-open-est-pct').innerText = openEstPct;
+  el('kpi-bench-pct').innerText = benchPct;
+  el('bar-open-est').style.width = openEstPct;
+  el('bar-bench').style.width = benchPct;
+
   el('kpi-calls').innerText = fmtNum(d.kpis.totalCalls);
   el('kpi-booking-rate').innerText = fmtPct(d.kpis.bookingRate);
   el('kpi-booked').innerText = d.kpis.totalCalls ? Math.round(d.kpis.totalCalls * (d.kpis.bookingRate/100)) : 0;
@@ -303,18 +295,12 @@ document.addEventListener('dataLoaded', (e) => {
   el('kpi-open-count').innerText = d.kpis.openEstimatesCount;
   el('kpi-sentiment').innerText = d.kpis.avgSentiment > 0 ? '+' + d.kpis.avgSentiment : d.kpis.avgSentiment;
   
-
   if(el('kpi-funnel-risk')) el('kpi-funnel-risk').innerText = fmtMoney(d.kpis.revenueAtRisk);
-  if(el('kpi-alert-risk')) el('kpi-alert-risk').innerText = fmtMoney(d.kpis.revenueAtRisk);
-  if(el('kpi-quick-calls')) el('kpi-quick-calls').innerText = fmtNum(d.kpis.totalCalls);
-  if(el('kpi-quick-risk')) el('kpi-quick-risk').innerText = fmtMoney(d.kpis.revenueAtRisk).replace(/,\d{3}$/, 'K');
   if(el('kpi-csr-score')) el('kpi-csr-score').innerText = d.kpis.csrHandlingScore.toFixed(1);
-
-
   if(el('kpi-open-est-sub')) el('kpi-open-est-sub').innerText = Math.round(d.kpis.backedByOpenEstimates / 1000);
   if(el('kpi-funnel-calls')) el('kpi-funnel-calls').innerText = fmtNum(d.kpis.totalCalls);
 
-  const maxCause = Math.max(...d.rootCauses.map(c => c.impact));
+  const maxCause = Math.max(...d.rootCauses.map(c => c.impact), 1);
   if(el('render-causes')) el('render-causes').innerHTML = d.rootCauses.map(c => {
     const width = (c.impact / maxCause * 100).toFixed(1) + '%';
     return `<div class="cause-row">
@@ -324,7 +310,7 @@ document.addEventListener('dataLoaded', (e) => {
     </div>`;
   }).join('');
   
-  const maxFunnel = Math.max(...d.funnel.map(f => f.count));
+  const maxFunnel = Math.max(...d.funnel.map(f => f.count), 1);
   if(el('render-funnel')) el('render-funnel').innerHTML = d.funnel.map((f, i) => {
     const width = (f.count / maxFunnel * 100).toFixed(1) + '%';
     const dropHtml = f.drop ? `<div class="funnel-pct" style="color:var(--amber)">${f.drop}%</div>` : `<div class="funnel-pct">--</div>`;
@@ -353,6 +339,16 @@ document.addEventListener('dataLoaded', (e) => {
       <td class="mono r" style="color:var(--green)">${fmtMoney(q.amount)}</td>
     </tr>`
   ).join('');
+}
+
+document.addEventListener('dataLoaded', (e) => {
+  renderDataset(e.detail.data);
+});
+
+document.addEventListener('languageChanged', () => {
+  if (window.DataEngine && window.DataEngine.getData()) {
+    renderDataset(window.DataEngine.getData());
+  }
 });
 </script>
 <script src="js/nav.js"></script>

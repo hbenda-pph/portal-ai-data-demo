@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -299,6 +299,11 @@ document.addEventListener('dataLoaded', (e) => {
 });
 </script>
 
+<!-- SCRIPTS -->
+<script src="js/i18n.js"></script>
+<script src="data/monarch.js"></script>
+<script src="data/demo.js"></script>
+<script src="js/data-engine.js"></script>
 <script src="js/nav.js"></script>
 <script>
   function setView(v) {
@@ -310,12 +315,29 @@ document.addEventListener('dataLoaded', (e) => {
     else if (v==='table') { c.classList.add('hidden'); t.classList.remove('hidden'); }
     else { c.classList.remove('hidden'); t.classList.remove('hidden'); }
   }
-  let lang = 'es';
+
   function toggleLang() {
-    lang = lang==='es' ? 'en' : 'es';
-    document.getElementById('lang-btn').textContent = lang==='es' ? 'Switch to English' : 'Cambiar a Espanol';
-    document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.getAttribute('data-'+lang); });
+    const current = window.I18n ? window.I18n.currentLang : 'en';
+    const next = current === 'en' ? 'es' : 'en';
+    if (window.I18n) window.I18n.setLanguage(next);
   }
+
+  document.addEventListener('languageChanged', (e) => {
+    const lang = e.detail.lang;
+    const btn = document.getElementById('lang-btn');
+    if (btn) btn.textContent = lang === 'en' ? 'Cambiar a Español' : 'Switch to English';
+    document.querySelectorAll('[data-en]').forEach(el => {
+      el.textContent = el.getAttribute('data-' + lang) || el.textContent;
+    });
+  });
+
+  // Trigger initial language translation on load
+  document.addEventListener('DOMContentLoaded', () => {
+    const lang = window.I18n ? window.I18n.currentLang : 'en';
+    document.querySelectorAll('[data-en]').forEach(el => {
+      el.textContent = el.getAttribute('data-' + lang) || el.textContent;
+    });
+  });
 </script>
 </body>
 </html>
