@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-title" content="Finanzas (QBO)"><meta name="page-section" content="Crecimiento">
+  <title>Finanzas | Portal AI Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/layout.css"><link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<aside id="sidebar"></aside>
+<div class="main-wrapper">
+  <header id="topbar"></header>
+  <main class="page-content">
+    <!-- ══ EN PROCESO BANNER ══ -->
+    <div class="en-proceso-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div class="en-proceso-banner-body">
+        <div class="en-proceso-banner-title">Seccion en proceso — datos reales pendientes de integracion</div>
+        <div class="en-proceso-banner-text">
+          La estructura y esquema de esta seccion estan definidos. Los datos reales se integraran desde
+          <code>BigQuery</code> (ServiceTitan + QBO) una vez que las queries de esta capa esten validadas.
+          Los KPIs y tablas muestran <strong style="color:var(--amber)">—</strong> hasta entonces.
+        </div>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <h1>05 — Finanzas Reales (QBO Integrado)</h1>
+      <p class="page-desc">Ingresos · COGS · Margen bruto · CAC · Reconciliación operativa-contable · <span style="color:var(--amber)">DEMO</span></p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid-4">
+      <div class="kpi-card blue"><div class="kpi-label">Revenue MTD</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-trend up">▲ +5.2%</span><span class="kpi-vs">vs mes ant.</span></div></div>
+      <div class="kpi-card green"><div class="kpi-label">Gross Profit</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-vs">34.2% margen</span></div></div>
+      <div class="kpi-card amber"><div class="kpi-label">EBITDA</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-vs">16.1% margen</span></div></div>
+      <div class="kpi-card purple"><div class="kpi-label">Net Income</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-vs">9.0% margen neto</span></div></div>
+    </div>
+
+    <!-- P&L + Chart -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Estado de Resultados — MTD</span><span class="demo-tag">DEMO · No usar como documento oficial</span></div>
+        <div id="pl-table"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Cascada Revenue → Net Income</span><span class="demo-tag">DEMO</span></div>
+        <div class="chart-wrap" style="height:280px"><canvas id="chart-waterfall"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Tendencia márgenes -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Evolución de Márgenes — 8 semanas</span><span class="demo-tag">DEMO</span></div>
+      <div class="chart-wrap" style="height:210px"><canvas id="chart-margins"></canvas></div>
+    </div>
+
+    <!-- Reconciliación + CAC -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Reconciliación Operativa-Contable</span><span class="demo-tag">DEMO</span></div>
+        <div id="recon-table"></div>
+        <div class="alert alert-success" style="margin-top:10px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div class="alert-content"><div class="alert-title">Reconciliación: diferencia &lt; 0.3%</div><div class="alert-body">ST Revenue vs QBO Revenue: $4,218,400 vs $4,205,820. Diferencia: $12,580 (timing). Normal.</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">CAC y Métricas de Adquisición</span><span class="demo-tag">DEMO</span></div>
+        <div id="cac-metrics"></div>
+        <div class="divider"></div>
+        <div class="alert alert-info" style="margin-top:8px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div class="alert-content"><div class="alert-title">Ratio LTV/CAC = 9.1x</div><div class="alert-body">LTV: $2,840 / CAC: $312. Muy saludable (meta: &gt;3x). Margen para aumentar inversión en adquisición.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/data.js"></script><script src="js/nav.js"></script><script src="js/charts.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const fn = DEMO.financials;
+
+  // P&L Table
+  const pl = document.getElementById('pl-table');
+  const plRows = [
+    { label:'Revenue', value: fn.revenue, pct: 100, bold: true, color: 'var(--text-1)' },
+    { label:'COGS (Costos Directos)', value: -fn.cogs, pct: -65.8, bold: false, color: 'var(--red)' },
+    { label:'Gross Profit', value: fn.gross_profit, pct: fn.gross_margin, bold: true, color: 'var(--green)' },
+    { label:'Gasto Marketing', value: -fn.mktg_spend, pct: -fn.mktg_margin, bold: false, color: 'var(--amber)' },
+    { label:'OpEx (estimado)', value: -563000, pct: -13.3, bold: false, color: 'var(--text-2)' },
+    { label:'EBITDA', value: fn.ebitda, pct: fn.ebitda_margin, bold: true, color: 'var(--cyan)' },
+    { label:'D&A / Interest (est.)', value: -300000, pct: -7.1, bold: false, color: 'var(--text-2)' },
+    { label:'Net Income', value: fn.net_income, pct: fn.net_margin, bold: true, color: 'var(--purple)' },
+  ];
+  plRows.forEach(r => {
+    const valStr = (r.value < 0 ? '(' : '') + fmtDollar(Math.abs(r.value)) + (r.value < 0 ? ')' : '');
+    pl.innerHTML += `
+      <div class="stat-row" style="${r.bold ? 'border-top:1px solid var(--border-2);margin-top:4px;padding-top:10px;' : ''}">
+        <span class="stat-label" style="${r.bold ? 'font-weight:700;color:var(--text-1)' : ''}">${r.label}</span>
+        <div style="display:flex;gap:12px;align-items:center">
+          <span style="font-size:0.7rem;color:var(--text-3);font-family:'DM Mono',monospace">${r.pct.toFixed(1)}%</span>
+          <span class="stat-val" style="color:${r.color}">${valStr}</span>
+        </div>
+      </div>`;
+  });
+
+  // Waterfall (usando bar chart aproximado)
+  barChart('chart-waterfall',
+    ['Revenue','COGS','Gross Profit','Mktg','OpEx','EBITDA','D&A','Net Income'],
+    [{
+      data: [4218400, -2775100, 1443300, -105900, -657300, 680000, -300000, 380000],
+      backgroundColor: [C.blue, C.red, C.green, C.amber, C.amber, C.cyan, C.amber, C.purple],
+    }],
+    { yFmt: fmtDollarShort }
+  );
+
+  // Margin trends
+  const wks = ['Ago 18','Ago 25','Sep 1','Sep 8','Sep 14'];
+  lineChart('chart-margins', wks,
+    [
+      { label:'Gross Margin %', data:[33.2,33.8,34.0,34.1,34.2], borderColor:C.green, fill:false },
+      { label:'EBITDA %',       data:[15.1,15.8,16.0,15.9,16.1], borderColor:C.cyan,  fill:false },
+      { label:'Net Margin %',   data:[8.2,8.8,8.9,8.8,9.0],      borderColor:C.purple,fill:false },
+    ],
+    { legend:true, zero:false, yFmt:v=>v+'%' }
+  );
+
+  // Reconciliación
+  const rt = document.getElementById('recon-table');
+  [
+    ['Revenue ST (ServiceTitan)', fmtDollar(4218400)],
+    ['Revenue QBO (QuickBooks)', fmtDollar(4205820)],
+    ['Diferencia', '$12,580'],
+    ['% Diferencia', '0.30%'],
+    ['Estado', '<span class="badge badge-green">Dentro de tolerancia</span>'],
+  ].forEach(([l,v]) => {
+    const isHtml = v.includes('<span');
+    rt.innerHTML += `<div class="stat-row"><span class="stat-label">${l}</span>${isHtml ? v : `<span class="stat-val">${v}</span>`}</div>`;
+  });
+
+  // CAC Metrics
+  const cm = document.getElementById('cac-metrics');
+  [
+    ['CAC Promedio', '$312'],
+    ['LTV Promedio', fmtDollar(DEMO.kpi.ltv_avg)],
+    ['Ratio LTV/CAC', '9.1x'],
+    ['Payback Period (est.)', '3.8 meses'],
+    ['Nuevos clientes / mes', '312'],
+    ['Gasto Mktg / mes', fmtDollar(DEMO.financials.mktg_spend)],
+  ].forEach(([l,v]) => {
+    cm.innerHTML += `<div class="stat-row"><span class="stat-label">${l}</span><span class="stat-val">${v}</span></div>`;
+  });
+});
+</script>
+</body></html>
+
+

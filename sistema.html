@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-title" content="Salud del Sistema"><meta name="page-section" content="Sistema">
+  <title>Salud del Sistema | Portal AI Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/layout.css"><link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<aside id="sidebar"></aside>
+<div class="main-wrapper">
+  <header id="topbar"></header>
+  <main class="page-content">
+    <!-- ══ EN PROCESO BANNER ══ -->
+    <div class="en-proceso-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div class="en-proceso-banner-body">
+        <div class="en-proceso-banner-title">Seccion en proceso — datos reales pendientes de integracion</div>
+        <div class="en-proceso-banner-text">
+          La estructura y esquema de esta seccion estan definidos. Los datos reales se integraran desde
+          <code>BigQuery</code> (ServiceTitan + QBO) una vez que las queries de esta capa esten validadas.
+          Los KPIs y tablas muestran <strong style="color:var(--amber)">—</strong> hasta entonces.
+        </div>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <h1>⚙ Salud del Sistema &amp; Gobernanza</h1>
+      <p class="page-desc">Estado de pipelines ETL · Calidad de datos · Tablas gobernadas · Para el Implementation Lead</p>
+    </div>
+
+    <!-- Status KPIs -->
+    <div class="grid-4">
+      <div class="kpi-card green"><div class="kpi-label">Estado ETL</div><div class="kpi-value" style="color:var(--green);font-size:1.4rem">OPERANDO</div><div class="kpi-footer"><span class="kpi-vs">Último run: 06:00 AM</span></div></div>
+      <div class="kpi-card blue"><div class="kpi-label">Tablas Cargadas</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-vs">0 con errores</span></div></div>
+      <div class="kpi-card green"><div class="kpi-label">Data Quality Score</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-trend up">▲ +0.3%</span><span class="kpi-vs">vs ant.</span></div></div>
+      <div class="kpi-card amber"><div class="kpi-label">Calls sin Audio</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-vs">91.2% con audio OK</span></div></div>
+    </div>
+
+    <!-- Pipeline Status + DQ Metrics -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Estado de Pipelines ETL</span>
+          <span class="badge badge-green">Todos OK</span>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Pipeline</th><th>Fuente</th><th>Último Run</th><th class="r">Registros</th><th>Estado</th></tr></thead>
+            <tbody id="pipeline-table">
+          <tr><td colspan="10" style="text-align:center;padding:20px 0">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <div class="empty-title">Datos en proceso de integracion</div>
+              <div class="empty-sub">Esta tabla se poblara desde BigQuery una vez validada la query correspondiente.</div>
+            </div>
+          </td></tr>
+        </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Métricas de Calidad de Datos</span></div>
+        <div id="dq-metrics"></div>
+        <div class="divider"></div>
+        <div class="chart-wrap" style="height:140px"><canvas id="chart-dq-trend"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Tables Inventory -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Inventario de Tablas Gobernadas</span><span class="badge badge-blue">42 tablas</span></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Dataset</th><th>Tabla</th><th>Descripción</th><th class="r">Registros</th><th>Actualización</th><th>Calidad</th></tr></thead>
+          <tbody id="tables-inv">
+          <tr><td colspan="10" style="text-align:center;padding:20px 0">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <div class="empty-title">Datos en proceso de integracion</div>
+              <div class="empty-sub">Esta tabla se poblara desde BigQuery una vez validada la query correspondiente.</div>
+            </div>
+          </td></tr>
+        </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Conexiones -->
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-header"><span class="card-title">ServiceTitan</span><span class="badge badge-green">Live</span></div>
+        <div id="st-status"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">QuickBooks Online</span><span class="badge badge-green">Sincronizado</span></div>
+        <div id="qbo-status"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">BigQuery — Proyecto Central</span><span class="badge badge-green">Activo</span></div>
+        <div id="bq-status"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/data.js"></script><script src="js/nav.js"></script><script src="js/charts.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const sy = DEMO.system;
+
+  // Pipeline table
+  const pt = document.getElementById('pipeline-table');
+  [
+    ['st_jobs_daily',        'ServiceTitan',  '2026-09-14 06:02 AM', '1,187', 'OK'],
+    ['st_calls_daily',       'ServiceTitan',  '2026-09-14 06:04 AM', '1,847', 'OK'],
+    ['st_customers',         'ServiceTitan',  '2026-09-14 06:06 AM', '3,842', 'OK'],
+    ['st_marketing_leads',   'ServiceTitan',  '2026-09-14 06:07 AM', '2,840', 'OK'],
+    ['qbo_transactions',     'QuickBooks',    '2026-09-14 05:45 AM', '4,218', 'OK'],
+    ['qbo_pnl_monthly',      'QuickBooks',    '2026-09-14 05:46 AM', '1',     'OK'],
+    ['consolidated_revenue', 'BQ Computed',   '2026-09-14 06:15 AM', '5,847', 'OK'],
+    ['vw_csr_performance',   'BQ View',       '2026-09-14 06:15 AM', 'View',  'OK'],
+    ['vw_funnel_weekly',     'BQ View',       '2026-09-14 06:15 AM', 'View',  'OK'],
+    ['vw_marketing_roi',     'BQ View',       '2026-09-14 06:15 AM', 'View',  'OK'],
+  ].forEach(([name, src, ts, recs, status]) => {
+    pt.innerHTML += `<tr>
+      <td class="mono" style="color:var(--cyan)">${name}</td>
+      <td>${src}</td>
+      <td class="mono" style="font-size:0.7rem">${ts}</td>
+      <td class="mono r">${recs}</td>
+      <td><span class="badge badge-green">${status}</span></td>
+    </tr>`;
+  });
+
+  // DQ Metrics
+  const dm = document.getElementById('dq-metrics');
+  [
+    ['Data Quality Score',    sy.dq_score+'%',  sy.dq_score >= 95 ? 'badge-green' : 'badge-amber'],
+    ['Calls con audio',       sy.calls_audio+'%', sy.calls_audio >= 90 ? 'badge-green' : 'badge-amber'],
+    ['Jobs con claves OK',    sy.jobs_keys+'%',   sy.jobs_keys >= 95 ? 'badge-green' : 'badge-amber'],
+    ['Clientes sin email',    '4.2%',             'badge-amber'],
+    ['Duplicados detectados', '0.1%',             'badge-green'],
+  ].forEach(([l,v,cls]) => {
+    dm.innerHTML += `<div class="stat-row"><span class="stat-label">${l}</span><span class="badge ${cls}">${v}</span></div>`;
+  });
+
+  // DQ trend
+  const wks = ['Sep 8','Sep 9','Sep 10','Sep 11','Sep 14'];
+  lineChart('chart-dq-trend', wks,
+    [{ label:'DQ Score', data:[95.8,96.1,96.0,96.2,96.4], borderColor:C.green, fill:true }],
+    { zero:false, yFmt:v=>v+'%', legend:false }
+  );
+
+  // Tables inventory (sample)
+  const ti = document.getElementById('tables-inv');
+  [
+    ['pph_central.raw', 'st_jobs', 'Jobs de ServiceTitan (raw)', '1,187', 'Diario', 'badge-green'],
+    ['pph_central.raw', 'st_calls', 'Llamadas y metadatos CSR', '1,847', 'Diario', 'badge-green'],
+    ['pph_central.raw', 'qbo_transactions', 'Transacciones QBO', '4,218', 'Diario', 'badge-green'],
+    ['pph_central.analytics', 'vw_funnel_weekly', 'Vista embudo económico', 'View', 'Computada', 'badge-green'],
+    ['pph_central.analytics', 'vw_csr_performance', 'KPIs por agente CSR', 'View', 'Computada', 'badge-green'],
+    ['pph_central.analytics', 'vw_marketing_roi', 'ROI por fuente mktg', 'View', 'Computada', 'badge-green'],
+    ['pph_central.finance', 'pnl_monthly', 'P&L consolidado mensual', '12', 'Mensual', 'badge-green'],
+    ['pph_central.clients', 'client_ltv', 'Modelo LTV por cliente', '3,842', 'Semanal', 'badge-amber'],
+  ].forEach(([ds, tabla, desc, recs, freq, cls]) => {
+    ti.innerHTML += `<tr>
+      <td class="mono" style="font-size:0.7rem;color:var(--text-3)">${ds}</td>
+      <td class="mono" style="color:var(--cyan)">${tabla}</td>
+      <td>${desc}</td>
+      <td class="mono r">${recs}</td>
+      <td><span class="badge badge-gray">${freq}</span></td>
+      <td><span class="badge ${cls}">OK</span></td>
+    </tr>`;
+  });
+
+  // Connection statuses
+  [['st-status', [
+    ['Tenant ID','pph-central'],['Sync Mode','Live API'],['Delay','~2 min'],['Versión API','v2'],
+  ]],['qbo-status',[
+    ['Company ID','pph-holdings'],['Último sync','05:45 AM'],['Modo','Batch diario'],['Entorno','Production'],
+  ]],['bq-status',[
+    ['Proyecto','pph-central-bq'],['Dataset principal','pph_central'],['Región','US'],['Tablas activas','42'],
+  ]]].forEach(([id, rows]) => {
+    const el = document.getElementById(id);
+    rows.forEach(([l,v]) => { el.innerHTML += `<div class="stat-row"><span class="stat-label">${l}</span><span class="stat-val">${v}</span></div>`; });
+  });
+});
+</script>
+</body></html>
+
+

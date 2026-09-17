@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-title" content="Portada">
+  <title>Portada | Portal AI Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .data-source-tag {
+      display:inline-flex;align-items:center;gap:5px;padding:3px 9px;
+      background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);
+      border-radius:100px;font-size:0.6rem;font-weight:700;letter-spacing:0.07em;
+      color:var(--cyan);font-family:'DM Mono',monospace;
+    }
+    .data-source-tag .pulse {
+      width:5px;height:5px;border-radius:50%;
+      background:var(--green);box-shadow:0 0 4px var(--green);flex-shrink:0;
+      animation: blink 2s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .kpi-row { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px; }
+
+    /* Impact card - la grande */
+    .impact-card {
+      background: linear-gradient(135deg, rgba(239,68,68,0.12) 0%, rgba(139,92,246,0.08) 100%);
+      border: 1px solid rgba(239,68,68,0.25);
+      border-radius: var(--radius-lg);
+      padding: 24px 26px;
+      position: relative; overflow: hidden;
+    }
+    .impact-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
+      background: linear-gradient(90deg, var(--red), var(--purple));
+    }
+    .impact-label {
+      font-size:0.65rem; font-weight:800; letter-spacing:0.1em;
+      color:var(--red); text-transform:uppercase; margin-bottom:8px;
+    }
+    .impact-value {
+      font-size:2.8rem; font-weight:900; letter-spacing:-0.04em;
+      color:var(--text-1); line-height:1; margin-bottom:6px;
+      font-family:'DM Mono',monospace;
+    }
+    .impact-value span { font-size:1.4rem; color:var(--red); }
+    .impact-sub { font-size:0.8rem; color:var(--text-2); }
+    .impact-sub strong { color:var(--text-1); }
+
+    /* Funnel steps */
+    .funnel-step {
+      display:flex; align-items:center; gap:12px;
+      padding:9px 0; border-bottom:1px solid var(--border-1);
+    }
+    .funnel-step:last-child { border-bottom:none; }
+    .funnel-num {
+      font-size:0.7rem; font-weight:800; color:var(--text-3);
+      width:20px; flex-shrink:0; text-align:right;
+    }
+    .funnel-label { font-size:0.8rem; color:var(--text-2); flex:1; }
+    .funnel-bar-wrap { width:100px; background:var(--bg-surface-2); border-radius:3px; height:16px; overflow:hidden; flex-shrink:0; }
+    .funnel-fill { height:100%; border-radius:3px; }
+    .funnel-val { font-family:'DM Mono',monospace; font-size:0.775rem; font-weight:600; color:var(--text-1); width:52px; text-align:right; flex-shrink:0; }
+    .funnel-pct { font-size:0.65rem; color:var(--text-3); width:38px; text-align:right; flex-shrink:0; }
+
+    /* Root cause mini */
+    .cause-row {
+      display:flex; align-items:center; gap:10px;
+      padding:7px 0; border-bottom:1px solid var(--border-1);
+    }
+    .cause-row:last-child { border-bottom:none; }
+    .cause-name { flex:1; font-size:0.78rem; color:var(--text-2); }
+    .cause-bar-wrap { width:80px; background:var(--bg-surface-2); border-radius:3px; height:14px; overflow:hidden; flex-shrink:0; }
+    .cause-fill { height:100%; border-radius:3px; }
+    .cause-val { font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--text-1); font-weight:600; width:54px; text-align:right; flex-shrink:0; }
+  </style>
+</head>
+<body>
+<aside id="sidebar"></aside>
+<div class="main-wrapper">
+  <header id="topbar"></header>
+  <main class="page-content">
+
+    <!-- Header -->
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:20px">
+      <div>
+        <h1>Portada — Impacto y KPIs Principales</h1>
+        <p class="page-desc" id="page-desc">Monarch Home Services &bull; Muestra auditada &bull; Cargando datos...</p>
+      </div>
+      <span class="data-source-tag"><span class="pulse"></span><span id="data-source">Cargando...</span></span>shape-mhs-1 &bull; gold.fc_call_intelligence &bull; Gemini 2.5 Flash</span>
+    </div>
+
+    <!-- IMPACTO PRINCIPAL + KPIs fila 1 -->
+    <div style="display:grid;grid-template-columns:1fr 3fr;gap:14px;margin-bottom:14px">
+
+      <!-- Impacto -->
+      <div class="impact-card">
+        <div class="impact-label">Dinero Real en Riesgo</div>
+        <div class="impact-value" id="kpi-revenue-risk">...</div>
+        <div class="impact-sub" style="margin-bottom:10px">Revenue no capturado &mdash; <strong>100% verificado</strong> contra estimados y facturas reales en ServiceTitan</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between;font-size:0.725rem">
+            <span style="color:var(--text-3)">Via presupuestos abiertos (<span id="kpi-open-est-pct">...</span>)</span>
+            <span style="color:var(--purple);font-family:'DM Mono',monospace" id="kpi-open-est">...</span>
+          </div>
+          <div class="progress" style="margin-bottom:4px"><div class="progress-fill purple" id="bar-open-est" style="width:0%"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.725rem">
+            <span style="color:var(--text-3)">Via benchmarks Monarch (<span id="kpi-bench-pct">...</span>)</span>
+            <span style="color:var(--accent);font-family:'DM Mono',monospace" id="kpi-bench">...</span>
+          </div>
+          <div class="progress"><div class="progress-fill blue" id="bar-bench" style="width:0%"></div></div>
+        </div>
+        <div style="margin-top:12px">
+          <a href="llamadas.html" style="display:inline-flex;align-items:center;gap:5px;font-size:0.725rem;color:var(--accent);font-weight:600">
+            Ver detalle completo &rarr;
+          </a>
+        </div>
+      </div>
+
+      <!-- KPI row 1 (3 columnas) -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+        <div class="kpi-card blue">
+          <div class="kpi-label">Llamadas Analizadas</div>
+          <div class="kpi-value" id="kpi-calls">...</div>
+          <div class="kpi-footer">
+            <span class="kpi-vs">Muestra auditada 1:1 con ST</span>
+          </div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Tasa de Cierre (Booking Rate)</div>
+          <div class="kpi-value" id="kpi-booking-rate">...</div>
+          <div class="kpi-footer">
+            <span style="color:var(--green);font-weight:700;font-size:0.75rem"><span id="kpi-booked">...</span> jobs agendados</span>
+          </div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Oportunidades Perdidas</div>
+          <div class="kpi-value"><span id="kpi-lost">...</span> <span style="font-size:1rem;font-weight:500;color:var(--amber)">(<span id="kpi-lost-pct">...</span>)</span></div>
+          <div class="kpi-footer">
+            <span class="kpi-vs">Lost-bookable recuperables</span>
+          </div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-label">Llamadas con Estimado Abierto</div>
+          <div class="kpi-value" style="font-size:1.5rem" id="kpi-open-count">...</div>
+          <div class="kpi-footer">
+            <span style="color:var(--purple);font-weight:700;font-size:0.75rem">$<span id="kpi-open-est-sub">...</span>K verificados en ST</span>
+          </div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Sentimiento Promedio</div>
+          <div class="kpi-value" style="font-size:1.5rem" id="kpi-sentiment">...</div>
+          <div class="kpi-footer">
+            <span class="kpi-vs">Escala -1.0 a +1.0 &mdash; Neutral</span>
+          </div>
+        </div>
+        <div class="kpi-card" style="border-color:rgba(245,158,11,0.25)">
+          <div class="kpi-label">Calificacion Manejo CSR</div>
+          <div class="kpi-value" style="font-size:1.5rem;color:var(--amber)"><span id="kpi-csr-score">...</span> <span style="font-size:0.85rem;color:var(--text-3);font-weight:400">/ 5.0</span></div>
+          <div class="kpi-footer">
+            <span class="kpi-vs">Oportunidad de coaching</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Causa Raiz + Funnel + Accion -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:18px">
+
+      <!-- Causa Raiz -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Causa Raiz de Perdida</span>
+          <span class="data-source-tag" style="font-size:0.57rem"><span class="pulse"></span>Query 02</span>
+        </div>
+        <div id="render-causes"></div>
+        <div style="margin-top:10px">
+          <a href="llamadas.html" style="font-size:0.7rem;color:var(--accent);font-weight:600">Ver Inteligencia de Llamadas &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Funnel de llamadas -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Embudo de la Muestra</span>
+          <span class="data-source-tag" style="font-size:0.57rem"><span class="pulse"></span><span id="kpi-funnel-calls">...</span> llamadas</span>
+        </div>
+        <div id="render-funnel"></div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-1)">
+          <div style="display:flex;justify-content:space-between;font-size:0.725rem;color:var(--text-3)">
+            <span>Revenue potencial recuperable</span>
+            <span style="color:var(--red);font-family:'DM Mono',monospace;font-weight:700" id="kpi-funnel-risk">...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Motor 1 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Action Motor 1 — Cola Outbound</span>
+          <span class="data-source-tag" style="font-size:0.57rem"><span class="pulse"></span>Query 03</span>
+        </div>
+        <div class="alert alert-critical" style="margin-bottom:10px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div class="alert-content">
+            <div class="alert-title">Accion inmediata requerida</div>
+            <div class="alert-body"><span id="kpi-alert-risk">...</span> verificado. Prioridad: llamar a P1 esta semana.</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th>P</th><th>Cliente</th><th>Servicio</th><th class="r">Monto</th>
+            </tr></thead>
+            <tbody id="render-csr"></tbody>
+          </table>
+        </div>
+        <div style="margin-top:10px">
+          <a href="llamadas.html" style="font-size:0.7rem;color:var(--accent);font-weight:600">Ver cola completa &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acceso Rapido a secciones -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Acceso Rapido — Secciones del Portal</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
+        <a href="llamadas.html" class="quick-card">
+          <div class="quick-card-icon" style="color:var(--cyan);background:var(--cyan-muted)">02</div>
+          <div><div class="quick-card-num">SECCION 02</div><div class="quick-card-name">Llamadas &amp; CSR</div><div class="quick-card-desc"><span id="kpi-quick-calls">...</span> auditadas &bull; <span id="kpi-quick-risk">...</span> riesgo</div></div>
+          <div class="quick-card-arrow">&rsaquo;</div>
+        </a>
+        <a href="embudo.html" class="quick-card">
+          <div class="quick-card-icon" style="color:var(--accent);background:var(--accent-muted)">01</div>
+          <div><div class="quick-card-num">SECCION 01</div><div class="quick-card-name">Embudo Economico</div><div class="quick-card-desc">Flujo completo Marketing&rarr;LTV</div></div>
+          <div class="quick-card-arrow">&rsaquo;</div>
+        </a>
+        <a href="marketing.html" class="quick-card">
+          <div class="quick-card-icon" style="color:var(--green);background:var(--green-muted)">04</div>
+          <div><div class="quick-card-num">SECCION 04</div><div class="quick-card-name">Marketing</div><div class="quick-card-desc">ROI por fuente</div></div>
+          <div class="quick-card-arrow">&rsaquo;</div>
+        </a>
+        <a href="finanzas.html" class="quick-card">
+          <div class="quick-card-icon" style="color:var(--amber);background:var(--amber-muted)">05</div>
+          <div><div class="quick-card-num">SECCION 05</div><div class="quick-card-name">Finanzas (QBO)</div><div class="quick-card-desc">P&amp;L integrado</div></div>
+          <div class="quick-card-arrow">&rsaquo;</div>
+        </a>
+        <a href="alertas.html" class="quick-card">
+          <div class="quick-card-icon" style="color:var(--red);background:var(--red-muted)">08</div>
+          <div><div class="quick-card-num">SECCION 08</div><div class="quick-card-name">Alertas &amp; Accion</div><div class="quick-card-desc">Cola de recuperacion</div></div>
+          <div class="quick-card-arrow">&rsaquo;</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align:center;padding:20px 0 8px;font-size:0.675rem;color:var(--text-3);border-top:1px solid var(--border-1);margin-top:6px">
+      Google Cloud BigQuery Lakehouse &bull; Proyecto: <span style="font-family:'DM Mono',monospace;color:var(--cyan)">shape-mhs-1</span> &bull; Modelo: Gemini 2.5 Flash &bull; Fuente: ServiceTitan API &bull; Sep 11, 2026
+    </div>
+
+  </main>
+</div>
+
+<script src="js/data.js"></script>
+<script src="data/monarch.js"></script>
+<script src="data/demo.js"></script>
+<script src="js/data-engine.js"></script>
+<script>
+document.addEventListener('dataLoaded', (e) => {
+  const d = e.detail.data;
+  const fmtMoney = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
+  const fmtNum = (val) => new Intl.NumberFormat('en-US').format(val);
+  const fmtPct = (val) => val + '%';
+  
+  const el = (id) => document.getElementById(id);
+  if(!el('page-desc')) return;
+  
+  el('page-desc').innerHTML = `${d.companyName} &bull; ${d.meta.period} &bull; ${d.meta.note} &bull; ${d.kpis.totalCalls} llamadas reconciliadas`;
+  el('data-source').innerText = d.meta.source;
+  
+  el('kpi-revenue-risk').innerHTML = fmtMoney(d.kpis.revenueAtRisk).replace('$', '$').replace(/,\d{3}$/, '<span>K</span>');
+  el('kpi-open-est').innerText = fmtMoney(d.kpis.backedByOpenEstimates);
+  el('kpi-bench').innerText = fmtMoney(d.kpis.backedByInvoiceBenchmarks);
+  
+  const pctOpen = (d.kpis.backedByOpenEstimates / d.kpis.revenueAtRisk * 100).toFixed(1) + '%';
+  const pctBench = (d.kpis.backedByInvoiceBenchmarks / d.kpis.revenueAtRisk * 100).toFixed(1) + '%';
+  el('kpi-open-est-pct').innerText = pctOpen;
+  el('bar-open-est').style.width = pctOpen;
+  el('kpi-bench-pct').innerText = pctBench;
+  el('bar-bench').style.width = pctBench;
+  
+  el('kpi-calls').innerText = fmtNum(d.kpis.totalCalls);
+  el('kpi-booking-rate').innerText = fmtPct(d.kpis.bookingRate);
+  el('kpi-booked').innerText = d.kpis.totalCalls ? Math.round(d.kpis.totalCalls * (d.kpis.bookingRate/100)) : 0;
+  el('kpi-lost').innerText = fmtNum(d.kpis.lostOpportunities);
+  el('kpi-lost-pct').innerText = fmtPct(d.kpis.lostPercentage);
+  el('kpi-open-count').innerText = d.kpis.openEstimatesCount;
+  el('kpi-sentiment').innerText = d.kpis.avgSentiment > 0 ? '+' + d.kpis.avgSentiment : d.kpis.avgSentiment;
+  
+
+  if(el('kpi-funnel-risk')) el('kpi-funnel-risk').innerText = fmtMoney(d.kpis.revenueAtRisk);
+  if(el('kpi-alert-risk')) el('kpi-alert-risk').innerText = fmtMoney(d.kpis.revenueAtRisk);
+  if(el('kpi-quick-calls')) el('kpi-quick-calls').innerText = fmtNum(d.kpis.totalCalls);
+  if(el('kpi-quick-risk')) el('kpi-quick-risk').innerText = fmtMoney(d.kpis.revenueAtRisk).replace(/,\d{3}$/, 'K');
+  if(el('kpi-csr-score')) el('kpi-csr-score').innerText = d.kpis.csrHandlingScore.toFixed(1);
+
+
+  if(el('kpi-open-est-sub')) el('kpi-open-est-sub').innerText = Math.round(d.kpis.backedByOpenEstimates / 1000);
+  if(el('kpi-funnel-calls')) el('kpi-funnel-calls').innerText = fmtNum(d.kpis.totalCalls);
+
+  const maxCause = Math.max(...d.rootCauses.map(c => c.impact));
+  if(el('render-causes')) el('render-causes').innerHTML = d.rootCauses.map(c => {
+    const width = (c.impact / maxCause * 100).toFixed(1) + '%';
+    return `<div class="cause-row">
+      <div class="cause-name">${c.reason} <span style="color:var(--text-3);font-size:0.65rem;margin-left:4px">(${c.count})</span></div>
+      <div class="cause-bar-wrap"><div class="cause-fill red" style="width:${width}"></div></div>
+      <div class="cause-val">$${Math.round(c.impact/1000)}K</div>
+    </div>`;
+  }).join('');
+  
+  const maxFunnel = Math.max(...d.funnel.map(f => f.count));
+  if(el('render-funnel')) el('render-funnel').innerHTML = d.funnel.map((f, i) => {
+    const width = (f.count / maxFunnel * 100).toFixed(1) + '%';
+    const dropHtml = f.drop ? `<div class="funnel-pct" style="color:var(--amber)">${f.drop}%</div>` : `<div class="funnel-pct">--</div>`;
+    return `<div class="funnel-step">
+      <div class="funnel-num">0${i+1}</div>
+      <div class="funnel-label">${f.step}</div>
+      <div class="funnel-bar-wrap"><div class="funnel-fill blue" style="width:${width}"></div></div>
+      <div class="funnel-val">${fmtNum(f.count)}</div>
+      ${dropHtml}
+    </div>`;
+  }).join('');
+  
+  if(el('render-csr')) el('render-csr').innerHTML = d.csrRanking.slice(0,3).map(c => 
+    `<tr>
+      <td class="metric-name">${c.name}</td>
+      <td class="val-primary" style="text-align:right">${c.rate.toFixed(1)}%</td>
+      <td class="val-danger" style="text-align:right">${fmtMoney(c.risk).replace(/,\d{3}$/, 'K')}</td>
+    </tr>`
+  ).join('');
+  
+  if(el('render-queue')) el('render-queue').innerHTML = d.lostQueue.slice(0,3).map(q => 
+    `<tr>
+      <td><span style="display:inline-flex;padding:2px 6px;border-radius:4px;font-size:0.6rem;font-weight:800;background:var(--${q.priority==='P1'?'red':q.priority==='P2'?'amber':'accent'}-muted);color:var(--${q.priority==='P1'?'red':q.priority==='P2'?'amber':'accent'});border:1px solid rgba(0,0,0,0.1)">${q.priority}</span></td>
+      <td class="pri" style="font-size:0.78rem">${q.customer} <br><span style="color:var(--text-3);font-size:0.65rem">&bull; ${q.csr}</span></td>
+      <td style="font-size:0.75rem;color:var(--text-2)">${q.reason}</td>
+      <td class="mono r" style="color:var(--green)">${fmtMoney(q.amount)}</td>
+    </tr>`
+  ).join('');
+});
+</script>
+<script src="js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{
+  "companyId": "mhs",
+  "companyName": "Monarch Home Services",
+  "meta": {
+    "period": "May 1 - Sep 16, 2026",
+    "updated": "2026-09-16 23:50 PM",
+    "source": "shape-mhs-1 • BigQuery Live Lakehouse",
+    "note": "2,316 Llamadas Auditadas y Validadas en BigQuery"
+  },
+  "kpis": {
+    "totalCalls": 2316,
+    "bookingRate": 13.2,
+    "lostOpportunities": 314,
+    "lostPercentage": 13.6,
+    "revenueAtRisk": 1001777.90,
+    "backedByOpenEstimates": 788830.60,
+    "backedByInvoiceBenchmarks": 212947.30,
+    "avgSentiment": 0.07,
+    "csrHandlingScore": 3.4,
+    "openEstimatesCount": 84
+  },
+  "rootCauses": [
+    { "reason": "Customer Hesitation / Consult", "impact": 211706.59, "count": 38 },
+    { "reason": "Competitor Shopping", "impact": 95917.57, "count": 24 },
+    { "reason": "Price Objection", "impact": 68480.49, "count": 13 },
+    { "reason": "Out of Service Area", "impact": 36718.88, "count": 8 },
+    { "reason": "No Availability", "impact": 31672.11, "count": 40 },
+    { "reason": "Emergency Not Handled", "impact": 24259.99, "count": 3 },
+    { "reason": "Other / Uncategorized", "impact": 533022.27, "count": 188 }
+  ],
+  "funnel": [
+    { "step": "Total Llamadas", "count": 2316, "drop": null },
+    { "step": "Lead Calificado", "count": 1780, "drop": -23.1 },
+    { "step": "Oportunidades Abiertas", "count": 619, "drop": -65.2 },
+    { "step": "Bookings Agendados", "count": 305, "drop": -50.7 }
+  ],
+  "csrRanking": [
+    { "name": "Keyana Royce", "calls": 818, "booked": 83, "rate": 10.1, "risk": 520033.20 },
+    { "name": "Broccoli AI (Voice Agent)", "calls": 613, "booked": 106, "rate": 17.3, "risk": 124777.00 },
+    { "name": "Jose Tovar", "calls": 575, "booked": 84, "rate": 14.6, "risk": 287427.32 },
+    { "name": "Jose Rangel", "calls": 80, "booked": 6, "rate": 7.5, "risk": 35721.22 },
+    { "name": "Biancha Gant", "calls": 61, "booked": 11, "rate": 18.0, "risk": 24150.55 },
+    { "name": "Ashley Robledo", "calls": 39, "booked": 4, "rate": 10.3, "risk": 2458.00 },
+    { "name": "Manuel Lopez", "calls": 27, "booked": 0, "rate": 0.0, "risk": 640.11 }
+  ],
+  "lostQueue": [
+    { "id": "CALL-503973208", "priority": "P1", "date": "May 12 22:05", "customer": "Steven and Barbara Tucker", "csr": "Jose Tovar", "reason": "Voicemail / No Live Agent", "amount": 58475, "description": "Llamada enviada directamente a correo de voz, sin respuesta de agente en vivo." },
+    { "id": "CALL-508372302", "priority": "P1", "date": "Jul 16 21:13", "customer": "Melissa Estrada", "csr": "Keyana Royce", "reason": "Voicemail Missed", "amount": 32127, "description": "Agente no disponible al momento de la llamada entrante. Cliente no dejó recado." },
+    { "id": "CALL-508387016", "priority": "P1", "date": "Jul 16 21:11", "customer": "Melissa Estrada", "csr": "Keyana Royce", "reason": "Customer Hesitation", "amount": 32127, "description": "Llamada para agendar mantenimiento de verano. Cliente no tenía su calendario disponible." },
+    { "id": "CALL-503956539", "priority": "P1", "date": "May 12 19:23", "customer": "Rose Ferrari", "csr": "Jose Tovar", "reason": "Out of Service Area", "amount": 30597, "description": "Consulta sobre citas de mantenimiento canceladas por cobertura de zona fuera del área de servicio." },
+    { "id": "CALL-508402618", "priority": "P1", "date": "Jul 16 23:03", "customer": "Danae Martinez", "csr": "Keyana Royce", "reason": "Customer Hesitation", "amount": 30597, "description": "Seguimiento a instalación de AC. Cliente consultará con su esposo antes de confirmar agenda." }
+  ]
+}

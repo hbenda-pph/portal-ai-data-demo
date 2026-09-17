@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-title" content="Embudo Económico"><meta name="page-section" content="Análisis">
+  <title>Embudo Económico | Portal AI Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/layout.css"><link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<aside id="sidebar"></aside>
+<div class="main-wrapper">
+  <header id="topbar"></header>
+  <main class="page-content">
+    <!-- ══ EN PROCESO BANNER ══ -->
+    <div class="en-proceso-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div class="en-proceso-banner-body">
+        <div class="en-proceso-banner-title">Seccion en proceso — datos reales pendientes de integracion</div>
+        <div class="en-proceso-banner-text">
+          La estructura y esquema de esta seccion estan definidos. Los datos reales se integraran desde
+          <code>BigQuery</code> (ServiceTitan + QBO) una vez que las queries de esta capa esten validadas.
+          Los KPIs y tablas muestran <strong style="color:var(--amber)">—</strong> hasta entonces.
+        </div>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <h1>01 — Embudo Económico Completo</h1>
+      <p class="page-desc">Flujo Marketing → Leads → Calls → Bookings → Jobs → Revenue → Gross Profit → Retention → LTV · <span style="color:var(--amber)">DEMO</span></p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid-4">
+      <div class="kpi-card blue"><div class="kpi-label">Leads / Inbound</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-vs">esta semana</span></div></div>
+      <div class="kpi-card green"><div class="kpi-label">Bookings</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-trend up">▲ +2.1%</span><span class="kpi-vs">vs ant.</span></div></div>
+      <div class="kpi-card amber"><div class="kpi-label">Booking Rate</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-trend down">▼ -1.2%</span><span class="kpi-vs">vs ant.</span></div></div>
+      <div class="kpi-card purple"><div class="kpi-label">Revenue / Lead</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-vs">promedio</span></div></div>
+    </div>
+
+    <!-- Funnel visual + Chart -->
+    <div class="grid-2-1">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Funnel Detallado — Caída por Etapa</span><span class="demo-tag">DEMO</span></div>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-funnel-bar"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Conversión por Paso</span></div>
+        <div id="funnel-detail"></div>
+      </div>
+    </div>
+
+    <!-- Trend semanal -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Tendencia del Embudo — 8 semanas</span><span class="demo-tag">DEMO</span></div>
+      <div class="chart-wrap" style="height:220px"><canvas id="chart-funnel-trend"></canvas></div>
+    </div>
+
+    <!-- Análisis de caída -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Dónde se Pierde Más Revenue</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Etapa</th><th>Entrada</th><th>Salida</th><th>Caída</th><th class="r">Revenue perdido est.</th></tr></thead>
+            <tbody id="loss-table">
+          <tr><td colspan="10" style="text-align:center;padding:20px 0">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <div class="empty-title">Datos en proceso de integracion</div>
+              <div class="empty-sub">Esta tabla se poblara desde BigQuery una vez validada la query correspondiente.</div>
+            </div>
+          </td></tr>
+        </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Benchmark — Booking Rate por Industria</span></div>
+        <div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-size:0.775rem;color:var(--text-2)">Tu empresa</span>
+            <span style="font-size:0.875rem;font-weight:700;color:var(--accent);font-family:'DM Mono',monospace">64.3%</span>
+          </div>
+          <div class="progress"><div class="progress-fill blue" style="width:64.3%"></div></div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-size:0.775rem;color:var(--text-2)">Industria Top 25%</span>
+            <span style="font-size:0.875rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace">72%</span>
+          </div>
+          <div class="progress"><div class="progress-fill green" style="width:72%"></div></div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-size:0.775rem;color:var(--text-2)">Industria Promedio</span>
+            <span style="font-size:0.875rem;font-weight:700;color:var(--amber);font-family:'DM Mono',monospace">58%</span>
+          </div>
+          <div class="progress"><div class="progress-fill amber" style="width:58%"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="alert alert-info" style="margin-top:8px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div class="alert-content">
+            <div class="alert-title">Oportunidad identificada</div>
+            <div class="alert-body">Subir booking rate de 64.3% a 70% generaría ~$38K adicional/semana en revenue.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/data.js"></script><script src="js/nav.js"></script><script src="js/charts.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const fn = DEMO.funnel;
+  const cols = [C.blue,C.cyan,C.green,C.green,C.amber,C.amber,C.red];
+
+  // Bar chart
+  barChart('chart-funnel-bar', fn.map(s=>s.label), fn.map(s=>s.value),
+    [{ data: fn.map(s=>s.value), backgroundColor: cols }],
+    { yFmt: v=>v.toLocaleString(), legend: false }
+  );
+
+  // Trend lines
+  const wks = ['Jul 28','Ago 4','Ago 11','Ago 18','Ago 25','Sep 1','Sep 8','Sep 14'];
+  lineChart('chart-funnel-trend', wks,
+    [
+      { label:'Leads',    data:[2620,2700,2810,2750,2840,2900,2780,2840], borderColor:C.blue,   fill:false },
+      { label:'Bookings', data:[1580,1620,1710,1620,1720,1780,1680,1352], borderColor:C.green,  fill:false },
+      { label:'Jobs',     data:[1410,1450,1540,1460,1540,1590,1480,1187], borderColor:C.amber,  fill:false },
+    ],
+    { legend: true, zero: false, yFmt: v=>v.toLocaleString() }
+  );
+
+  // Detalle funnel
+  const fd = document.getElementById('funnel-detail');
+  const maxV = fn[0].value;
+  fn.forEach((s,i) => {
+    const w = ((s.value/maxV)*100).toFixed(0);
+    const dropBadge = s.drop
+      ? `<span class="badge ${s.drop < -40 ? 'badge-red' : 'badge-amber'}">${s.drop.toFixed(1)}%</span>`
+      : `<span class="badge badge-gray">Inicio</span>`;
+    fd.innerHTML += `
+      <div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-size:0.775rem;color:var(--text-2)">${s.label}</span>
+          <div style="display:flex;gap:6px;align-items:center">
+            ${dropBadge}
+            <span style="font-size:0.8rem;font-weight:700;color:var(--text-1);font-family:'DM Mono',monospace">${s.value.toLocaleString()}</span>
+          </div>
+        </div>
+        <div class="progress"><div class="progress-fill" style="width:${w}%;background:${cols[i]}"></div></div>
+      </div>`;
+  });
+
+  // Loss table
+  const lt = document.getElementById('loss-table');
+  const pairs = [
+    ['Leads → Calls',    2840, 2104, -25.9, 2150000],
+    ['Calls → Bookings', 2104, 1352, -35.7, 1840000],
+    ['Bookings → Jobs',  1352, 1187, -12.2,  480000],
+    ['Jobs → Revenue',   1187,  982, -17.3,  320000],
+    ['Revenue → GP',      982,  336, -65.8,  980000],
+  ];
+  pairs.forEach(([label, en, out, pct, lost]) => {
+    const cls = pct < -30 ? 'badge-red' : 'badge-amber';
+    lt.innerHTML += `<tr>
+      <td class="pri">${label}</td>
+      <td class="mono">${en.toLocaleString()}</td>
+      <td class="mono">${out.toLocaleString()}</td>
+      <td><span class="badge ${cls}">${pct.toFixed(1)}%</span></td>
+      <td class="mono r" style="color:var(--red)">${fmtDollar(lost)}</td>
+    </tr>`;
+  });
+});
+</script>
+</body></html>
+
+

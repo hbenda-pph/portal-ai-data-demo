@@ -1,0 +1,15 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.log
+.git
+.gitignore
+venv/
+.env
+PORTAL_ARCHITECTURE_STRATEGY.md
+IMPLEMENTATION_PLAN.md
+WALKTHROUGH.md
+README.md
+

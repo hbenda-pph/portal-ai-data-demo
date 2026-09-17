@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-title" content="Operaciones &amp; Técnicos"><meta name="page-section" content="Operaciones">
+  <title>Operaciones | Portal AI Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/layout.css"><link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<aside id="sidebar"></aside>
+<div class="main-wrapper">
+  <header id="topbar"></header>
+  <main class="page-content">
+    <!-- ══ EN PROCESO BANNER ══ -->
+    <div class="en-proceso-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div class="en-proceso-banner-body">
+        <div class="en-proceso-banner-title">Seccion en proceso — datos reales pendientes de integracion</div>
+        <div class="en-proceso-banner-text">
+          La estructura y esquema de esta seccion estan definidos. Los datos reales se integraran desde
+          <code>BigQuery</code> (ServiceTitan + QBO) una vez que las queries de esta capa esten validadas.
+          Los KPIs y tablas muestran <strong style="color:var(--amber)">—</strong> hasta entonces.
+        </div>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <h1>03 — Operaciones &amp; Técnicos</h1>
+      <p class="page-desc">Eficiencia por zona · Utilización · Tiempo no facturado · Capacidad · <span style="color:var(--amber)">DEMO</span></p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid-4">
+      <div class="kpi-card blue"><div class="kpi-label">Jobs Completados / Semana</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-trend up">▲ +3.2%</span><span class="kpi-vs">vs ant.</span></div></div>
+      <div class="kpi-card green"><div class="kpi-label">Utilización Promedio</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-vs">todas las zonas</span></div></div>
+      <div class="kpi-card amber"><div class="kpi-label">Ticket Promedio</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-trend up">▲ +1.8%</span><span class="kpi-vs">vs ant.</span></div></div>
+      <div class="kpi-card red"><div class="kpi-label">Horas No Facturadas</div><div class="kpi-value" style="color:var(--red)"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-vs" style="color:var(--red)">esta semana</span></div></div>
+    </div>
+
+    <!-- Eficiencia por Zona + Utilización -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Eficiencia por Zona</span><span class="demo-tag">DEMO</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Zona</th><th class="r">Jobs</th><th class="r">Revenue</th><th class="r">Utilización</th><th class="r">Avg Ticket</th><th class="r">H. No Facturadas</th></tr></thead>
+            <tbody id="zone-table">
+          <tr><td colspan="10" style="text-align:center;padding:20px 0">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <div class="empty-title">Datos en proceso de integracion</div>
+              <div class="empty-sub">Esta tabla se poblara desde BigQuery una vez validada la query correspondiente.</div>
+            </div>
+          </td></tr>
+        </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Utilización por Zona</span><span class="demo-tag">DEMO</span></div>
+        <div class="chart-wrap" style="height:250px"><canvas id="chart-util"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Revenue por Zona + Jobs por Zona -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Revenue por Zona — Semana</span><span class="demo-tag">DEMO</span></div>
+        <div class="chart-wrap" style="height:220px"><canvas id="chart-zone-rev"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Trabajos Incompletos / Tiempo de Respuesta</span></div>
+        <div id="ops-metrics"></div>
+        <div class="divider"></div>
+        <div class="alert alert-warning" style="margin-top:8px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div class="alert-content">
+            <div class="alert-title">Zona Central bajo rendimiento</div>
+            <div class="alert-body">Utilización 61% vs meta 75%. Horas no facturadas: 12.3h/semana. Revisar asignación de rutas y scheduling.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tendencia jobs -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Tendencia Jobs vs Revenue — 8 semanas</span><span class="demo-tag">DEMO</span></div>
+      <div class="chart-wrap" style="height:200px"><canvas id="chart-jobs-trend"></canvas></div>
+    </div>
+
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/data.js"></script><script src="js/nav.js"></script><script src="js/charts.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const zones = DEMO.technicians;
+
+  // Zone table
+  const zt = document.getElementById('zone-table');
+  zones.forEach(z => {
+    const utilCls = z.util >= 80 ? 'badge-green' : z.util >= 70 ? 'badge-amber' : 'badge-red';
+    const unbilledCls = z.unbilled_h > 10 ? 'style="color:var(--red)"' : z.unbilled_h > 6 ? 'style="color:var(--amber)"' : '';
+    zt.innerHTML += `<tr>
+      <td class="pri">${z.zone}</td>
+      <td class="mono r">${z.jobs}</td>
+      <td class="mono r">${fmtDollarShort(z.revenue)}</td>
+      <td class="r"><span class="badge ${utilCls}">${z.util}%</span></td>
+      <td class="mono r">${fmtDollar(z.avg_ticket)}</td>
+      <td class="mono r" ${unbilledCls}>${z.unbilled_h}h</td>
+    </tr>`;
+  });
+
+  // Utilization bar
+  hbarChart('chart-util', zones.map(z=>z.zone), zones.map(z=>z.util),
+    zones.map(z => z.util >= 80 ? C.green : z.util >= 70 ? C.amber : C.red),
+    { xFmt: v=>v+'%', ratio:false }
+  );
+
+  // Revenue by zone
+  barChart('chart-zone-rev', zones.map(z=>z.zone),
+    [{ data: zones.map(z=>z.revenue), backgroundColor: [C.green,C.blue,C.cyan,C.amber,C.purple] }],
+    { yFmt: fmtDollarShort }
+  );
+
+  // Ops metrics
+  const om = document.getElementById('ops-metrics');
+  [
+    ['Trabajos incompletos esta semana', '23'],
+    ['Tiempo de respuesta promedio', '2h 14min'],
+    ['Trabajos reagendados', '41'],
+    ['Satisfacción cliente (est.)', '4.6 / 5.0'],
+    ['Horas no facturadas total', '39.8h'],
+  ].forEach(([l,v]) => {
+    om.innerHTML += `<div class="stat-row"><span class="stat-label">${l}</span><span class="stat-val">${v}</span></div>`;
+  });
+
+  // Jobs trend
+  const wks = ['Ago 18','Ago 25','Sep 1','Sep 8','Sep 14'];
+  lineChart('chart-jobs-trend', wks,
+    [
+      { label:'Jobs',    data:[1082,1120,1098,1150,1187], borderColor:C.blue,  fill:true, yAxisID:'y' },
+      { label:'Revenue', data:[3820000,4050000,3990000,4180000,4218400], borderColor:C.green, fill:false, yAxisID:'y1' },
+    ],
+    { legend:true, zero:false, extra:{ scales:{
+      y:  { position:'left',  grid:{color:C.grid}, ticks:{color:C.text,callback:v=>v.toLocaleString(),font:{size:10}} },
+      y1: { position:'right', grid:{display:false}, ticks:{color:C.text,callback:fmtDollarShort,font:{size:10}} },
+    }}}
+  );
+});
+</script>
+</body></html>
+
+

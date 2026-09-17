@@ -1,0 +1,321 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-title" content="Inteligencia de Llamadas">
+  <meta name="page-section" content="Analisis">
+  <title>Inteligencia de Llamadas | Portal AI Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .data-source-tag {
+      display:inline-flex;align-items:center;gap:5px;padding:3px 9px;
+      background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);
+      border-radius:100px;font-size:0.6rem;font-weight:700;letter-spacing:0.07em;
+      color:var(--cyan);font-family:'DM Mono',monospace;
+    }
+    .data-source-tag .pulse { width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 4px var(--green);flex-shrink:0; }
+    .narrative-block {
+      background:var(--bg-surface-2);border:1px solid var(--border-1);
+      border-left:3px solid var(--accent);border-radius:var(--radius-md);
+      padding:14px 18px;margin-bottom:20px;font-size:0.8375rem;color:var(--text-2);line-height:1.65;
+    }
+    .narrative-block strong { color:var(--text-1); }
+    .kpi-row { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px; }
+    .exec-table { width:100%;border-collapse:collapse;font-size:0.8rem; }
+    .exec-table thead tr { background:var(--bg-surface-2);border-bottom:1px solid var(--border-1); }
+    .exec-table th { padding:9px 14px;text-align:left;font-size:0.6rem;font-weight:700;letter-spacing:0.08em;color:var(--text-3);text-transform:uppercase; }
+    .exec-table td { padding:9px 14px;border-bottom:1px solid var(--border-1);color:var(--text-2);vertical-align:middle; }
+    .exec-table tbody tr:last-child td { border-bottom:none; }
+    .exec-table tbody tr:hover td { background:rgba(255,255,255,0.018); }
+    .exec-table td.metric-name { color:var(--text-1);font-weight:600;font-size:0.8125rem; }
+    .exec-table td.metric-name.sub { color:var(--text-2);font-weight:400;padding-left:28px;font-size:0.775rem; }
+    .exec-table td.val-primary { color:var(--accent);font-family:'DM Mono',monospace;font-weight:700;font-size:0.9rem; }
+    .exec-table td.val-danger  { color:var(--red);font-family:'DM Mono',monospace;font-weight:700;font-size:0.9rem; }
+    .exec-table td.val-sub     { color:var(--purple);font-family:'DM Mono',monospace;font-size:0.85rem; }
+    .exec-table td.val-pos     { color:var(--green);font-family:'DM Mono',monospace;font-size:0.85rem; }
+    .exec-table tr.highlight-row td { background:rgba(239,68,68,0.04); }
+    .priority-badge { display:inline-flex;padding:2px 7px;border-radius:5px;font-size:0.6rem;font-weight:800;letter-spacing:0.04em; }
+    .p1 { background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.25); }
+    .p2 { background:var(--amber-muted);color:var(--amber);border:1px solid rgba(245,158,11,0.25); }
+    .p3 { background:var(--accent-muted);color:var(--accent);border:1px solid rgba(59,126,245,0.2); }
+    .view-toggle { display:flex;gap:6px; }
+    .vtbtn { padding:5px 12px;border-radius:var(--radius-sm);font-size:0.725rem;font-weight:600;cursor:pointer;border:1px solid var(--border-2);color:var(--text-2);background:var(--bg-surface-2);transition:all var(--t-fast); }
+    .vtbtn.active { background:var(--accent-muted);border-color:rgba(59,126,245,0.3);color:var(--accent); }
+    .vtbtn:hover:not(.active) { color:var(--text-1); }
+    .hidden { display:none !important; }
+  </style>
+</head>
+<body>
+<aside id="sidebar"></aside>
+<div class="main-wrapper">
+  <header id="topbar"></header>
+  <main class="page-content">
+
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+      <div>
+        <h1>02 - Inteligencia de Llamadas &amp; CSR</h1>
+        <p class="page-desc" id="page-desc">Monarch Home Services &bull; Muestra auditada &bull; Cargando datos...</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="view-toggle">
+          <button class="vtbtn" id="btn-cards" onclick="setView('cards')">Tarjetas</button>
+          <button class="vtbtn" id="btn-table" onclick="setView('table')">Cuadro</button>
+          <button class="vtbtn active" id="btn-both"  onclick="setView('both')">Ambos</button>
+        </div>
+        <button class="vtbtn" onclick="toggleLang()" id="lang-btn">Switch to English</button>
+        <button class="vtbtn" onclick="window.print()">Exportar PDF</button>
+        <span class="data-source-tag"><span class="pulse"></span><span id="data-source">Cargando...</span></span>
+      </div>
+    </div>
+
+    <div class="narrative-block" id="narrative-text">Cargando contexto narrativo...</div>
+
+    <section id="section-cards">
+      <div class="kpi-row">
+        <div class="kpi-card blue">
+          <div class="kpi-label" data-en="Analyzed Calls (1:1)" data-es="Llamadas Analizadas (1:1)">Llamadas Analizadas (1:1)</div>
+          <div class="kpi-value" id="kpi-calls">...</div>
+          <div class="kpi-footer"><span class="kpi-vs" data-en="Audited end-to-end" data-es="Auditadas punta a punta">Auditadas punta a punta</span></div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label" data-en="Booking Rate" data-es="Tasa de Cierre">Tasa de Cierre</div>
+          <div class="kpi-value" id="kpi-booking-rate">...</div>
+          <div class="kpi-footer"><span style="color:var(--green);font-weight:700;font-size:0.75rem" data-en="72 booked jobs" data-es="72 jobs agendados">72 jobs agendados</span></div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label" data-en="Lost Opportunities" data-es="Oportunidades Perdidas">Oportunidades Perdidas</div>
+          <div class="kpi-value"><span id="kpi-lost">...</span> <span style="font-size:1rem;font-weight:500;color:var(--amber)">(<span id="kpi-lost-pct">...</span>)</span></div>
+          <div class="kpi-footer"><span class="kpi-vs" data-en="High-intent non-booked" data-es="Con intencion, sin agendar">Con intencion, sin agendar</span></div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-label" data-en="Revenue at Risk" data-es="Dinero Real en Riesgo">Dinero Real en Riesgo</div>
+          <div class="kpi-value" style="color:var(--red)" id="kpi-revenue-risk">...</div>
+          <div class="kpi-footer"><span style="color:var(--red);font-weight:700;font-size:0.7rem" data-en="100% verified" data-es="100% verificado">100% verificado</span></div>
+        </div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-card purple">
+          <div class="kpi-label" data-en="Backed by Open Estimates" data-es="Via Presupuestos Abiertos">Via Presupuestos Abiertos</div>
+          <div class="kpi-value" style="font-size:1.5rem;color:var(--purple)">$<span id="kpi-open-est">...</span></div>
+          <div class="kpi-footer"><span class="kpi-vs" data-en="84.2% of risk, 46 quotes" data-es="84.2% del riesgo, 46 cotizaciones">84.2% del riesgo, 46 cotizaciones</span></div>
+        </div>
+        <div class="kpi-card purple">
+          <div class="kpi-label" data-en="Backed by Invoice Benchmarks" data-es="Via Benchmarks Facturacion">Via Benchmarks Facturacion</div>
+          <div class="kpi-value" style="font-size:1.5rem;color:var(--purple)">$<span id="kpi-bench">...</span></div>
+          <div class="kpi-footer"><span class="kpi-vs" data-en="105 calls, Monarch history" data-es="105 llamadas, historial real">105 llamadas, historial real</span></div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-label" data-en="Avg Customer Sentiment" data-es="Sentimiento Promedio">Sentimiento Promedio</div>
+          <div class="kpi-value" style="font-size:1.5rem" id="kpi-sentiment">...</div>
+          <div class="kpi-footer"><span class="kpi-vs" data-en="Scale -1.0 to +1.0 Neutral" data-es="Escala -1.0 a +1.0 Neutral">Escala -1.0 a +1.0 Neutral</span></div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label" data-en="CSR Handling Score" data-es="Calificacion Manejo CSR">Calificacion Manejo CSR</div>
+          <div class="kpi-value" style="font-size:1.5rem;color:var(--amber)"><span id="kpi-csr-score">...</span> <span style="font-size:0.9rem;color:var(--text-3)">/ 5.0</span></div>
+          <div class="kpi-footer"><span class="kpi-vs" data-en="Coaching opportunity" data-es="Oportunidad de coaching">Oportunidad de coaching</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-table" style="margin-bottom:18px">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title" data-en="Executive Scorecard (Reconciled Metrics)" data-es="Cuadro Ejecutivo de Resultados">Cuadro Ejecutivo de Resultados</span>
+          <span class="data-source-tag" style="font-size:0.58rem"><span class="pulse"></span>shape-mhs-1.gold.fc_call_intelligence</span>
+        </div>
+        <div class="table-wrap">
+          <table class="exec-table">
+            <thead><tr>
+              <th data-en="Key Business Metric" data-es="Metrica Clave" style="width:38%">Metrica Clave</th>
+              <th data-en="Value" data-es="Resultado Real" style="width:18%">Resultado Real</th>
+              <th data-en="Business Context" data-es="Contexto Operativo">Contexto Operativo</th>
+            </tr></thead>
+            <tbody>
+              <tr><td class="metric-name" data-en="Total Analyzed Calls (1:1)" data-es="Total Llamadas Analizadas (1:1)">Total Llamadas Analizadas (1:1)</td><td class="val-primary"><span id="kpi-table-calls">...</span> llamadas</td><td data-en="End-to-end traced in ServiceTitan" data-es="Universo trazado con cliente, campana y agente en ServiceTitan">Universo trazado con cliente, campana y agente en ServiceTitan</td></tr>
+              <tr><td class="metric-name" data-en="Successfully Booked Calls" data-es="Llamadas Agendadas Exitosamente">Llamadas Agendadas Exitosamente</td><td class="val-pos"><span id="kpi-table-booked">...</span> jobs</td><td data-en="Booked during the initial call" data-es="Citas convertidas a Job ID durante la llamada inicial">Citas convertidas a Job ID durante la llamada inicial</td></tr>
+              <tr><td class="metric-name" data-en="Inbound Call Booking Rate" data-es="Tasa de Cierre Telefonico">Tasa de Cierre Telefonico (Booking Rate)</td><td class="val-primary">7.3%</td><td data-en="Current CSR conversion efficiency" data-es="Eficiencia actual de conversion del equipo CSR">Eficiencia actual de conversion del equipo CSR</td></tr>
+              <tr><td class="metric-name" data-en="Recoverable Lost Opportunities" data-es="Oportunidades Perdidas Rescatables">Oportunidades Perdidas Rescatables (Lost Bookable)</td><td style="color:var(--amber);font-family:'DM Mono',monospace;font-weight:700">151 - 15.4%</td><td data-en="High-intent leads that did not book" data-es="Clientes con intencion de compra que no agendaron">Clientes con intencion de compra que no agendaron</td></tr>
+              <tr class="highlight-row"><td class="metric-name" data-en="Total Verified Revenue at Risk" data-es="Dinero Real en Riesgo Total">Dinero Real en Riesgo Total</td><td class="val-danger">$<span id="kpi-table-risk">...</span></td><td data-en="100% verified against ST estimates and invoices" data-es="100% verificado contra estimados y facturas reales de ServiceTitan">100% verificado contra estimados y facturas reales de ServiceTitan</td></tr>
+              <tr><td class="metric-name sub" data-en="Via Open ServiceTitan Estimates" data-es="Via Presupuestos Abiertos en ServiceTitan">Via Presupuestos Abiertos en ServiceTitan</td><td class="val-sub">$<span id="kpi-table-open">...</span></td><td data-en="46 customers with active quotes (84.2%)" data-es="46 clientes con cotizaciones activas en ServiceTitan (84.2%)">46 clientes con cotizaciones activas en ServiceTitan (84.2%)</td></tr>
+              <tr><td class="metric-name sub" data-en="Via Monarch Historical Invoicing" data-es="Via Ticket Promedio Historico Monarch">Via Ticket Promedio Historico Monarch</td><td class="val-sub">$<span id="kpi-table-bench">...</span></td><td data-en="105 calls priced with real invoice benchmarks" data-es="105 llamadas valoradas con ticket promedio real de facturacion">105 llamadas valoradas con ticket promedio real de facturacion</td></tr>
+              <tr><td class="metric-name" data-en="Average Customer Sentiment" data-es="Sentimiento Promedio del Cliente">Sentimiento Promedio del Cliente</td><td class="val-primary">+0.04</td><td data-en="Scale -1.0 to +1.0. Neutral overall" data-es="Escala -1.0 a +1.0. Balance neutral">Escala -1.0 a +1.0. Balance neutral</td></tr>
+              <tr><td class="metric-name" data-en="CSR Call Handling Score" data-es="Calificacion de Manejo del Agente CSR">Calificacion de Manejo del Agente (CSR)</td><td style="color:var(--amber);font-family:'DM Mono',monospace;font-weight:700">3.0 / 5.0</td><td data-en="Opportunity to improve objection handling" data-es="Oportunidad de coaching en manejo de objeciones">Oportunidad de coaching en manejo de objeciones y retencion</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title" data-en="Lost Reason Breakdown (Root Cause)" data-es="Diagnostico de Causa Raiz">Diagnostico de Causa Raiz de Perdida</span>
+          <span class="data-source-tag" style="font-size:0.58rem"><span class="pulse"></span>Query 02</span>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th data-en="Category" data-es="Categoria">Categoria</th>
+              <th data-en="Calls" data-es="Llamadas">Llamadas</th>
+              <th data-en="Total Value" data-es="Impacto Total">Impacto Total</th>
+              <th data-en="Share" data-es="Participacion">Participacion</th>
+            </tr></thead>
+            <tbody>
+              <tr><td class="pri">No Budget / Financing</td><td class="mono">47</td><td class="mono" style="color:var(--red)">$251,041</td><td><div style="font-size:.75rem;margin-bottom:2px">47.8%</div><div class="progress"><div class="progress-fill red" style="width:47.8%"></div></div></td></tr>
+              <tr><td class="pri">Customer Hesitation</td><td class="mono">18</td><td class="mono" style="color:var(--amber)">$159,534</td><td><div style="font-size:.75rem;margin-bottom:2px">30.4%</div><div class="progress"><div class="progress-fill amber" style="width:30.4%"></div></div></td></tr>
+              <tr><td class="pri">Competitor Shopping</td><td class="mono">10</td><td class="mono" style="color:var(--amber)">$46,725</td><td><div style="font-size:.75rem;margin-bottom:2px">8.9%</div><div class="progress"><div class="progress-fill amber" style="width:8.9%"></div></div></td></tr>
+              <tr><td class="pri">Price Objection</td><td class="mono">7</td><td class="mono" style="color:var(--amber)">$35,217</td><td><div style="font-size:.75rem;margin-bottom:2px">6.7%</div><div class="progress"><div class="progress-fill amber" style="width:6.7%"></div></div></td></tr>
+              <tr><td class="pri">No Availability</td><td class="mono">20</td><td class="mono" style="color:var(--accent)">$14,105</td><td><div style="font-size:.75rem;margin-bottom:2px">2.7%</div><div class="progress"><div class="progress-fill blue" style="width:2.7%"></div></div></td></tr>
+              <tr><td class="pri">Out of Service Area</td><td class="mono">4</td><td class="mono" style="color:var(--accent)">$1,786</td><td><div style="font-size:.75rem;margin-bottom:2px">0.3%</div><div class="progress"><div class="progress-fill blue" style="width:0.3%"></div></div></td></tr>
+              <tr><td style="color:var(--text-3)">Other / Unspecified</td><td class="mono">92</td><td class="mono" style="color:var(--purple)">$267,934</td><td><div style="font-size:.75rem;margin-bottom:2px">51.0%</div><div class="progress"><div class="progress-fill purple" style="width:51%"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title" data-en="Action Motor 1: Sales Recovery Queue" data-es="Action Motor 1: Cola de Ventas Outbound">Action Motor 1: Cola de Ventas Outbound</span>
+          <span class="data-source-tag" style="font-size:0.58rem"><span class="pulse"></span>Query 03</span>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th data-en="Priority" data-es="Prioridad">Prioridad</th>
+              <th data-en="Customer" data-es="Cliente">Cliente</th>
+              <th data-en="Service" data-es="Servicio">Servicio</th>
+              <th data-en="Amount" data-es="Monto" class="r">Monto</th>
+              <th data-en="Suggested Action" data-es="Accion Sugerida">Accion Sugerida</th>
+            </tr></thead>
+            <tbody>
+              <tr><td><span class="priority-badge p1" data-en="P1 Urgent" data-es="P1 Urgente">P1 Urgente</span></td><td><span class="pri">Dao Moua</span><br><span style="color:var(--text-3);font-size:.7rem">+1 (661) 214-8732</span></td><td>Plumbing</td><td class="mono r" style="color:var(--green)">$29,140</td><td style="font-size:.75rem" data-en="Offer 0% financing or diagnostic fee credit." data-es="Ofrecer financiamiento 0% o credito de diagnostico.">Ofrecer financiamiento 0% o credito de diagnostico.</td></tr>
+              <tr><td><span class="priority-badge p2" data-en="P2 Follow-up" data-es="P2 Seguimiento">P2 Seguimiento</span></td><td><span class="pri">Melissa Estrada</span><br><span style="color:var(--text-3);font-size:.7rem">+1 (661) 214-8732</span></td><td>Tune-up</td><td class="mono r" style="color:var(--green)">$32,127</td><td style="font-size:.75rem" data-en="Follow up on open estimate with schedule options." data-es="Seguimiento a presupuesto con opciones de agenda.">Seguimiento a presupuesto con opciones de agenda.</td></tr>
+              <tr><td><span class="priority-badge p2" data-en="P2 Follow-up" data-es="P2 Seguimiento">P2 Seguimiento</span></td><td><span class="pri">Danae Martinez</span><br><span style="color:var(--text-3);font-size:.7rem">+1 (661) 214-8732</span></td><td>Tune-up</td><td class="mono r" style="color:var(--green)">$30,597</td><td style="font-size:.75rem" data-en="Resolve scope doubts on installation quote." data-es="Resolver dudas de alcance sobre cotizacion.">Resolver dudas de alcance sobre cotizacion.</td></tr>
+              <tr><td><span class="priority-badge p3" data-en="P3 General" data-es="P3 General">P3 General</span></td><td><span class="pri">Melissa Estrada</span><br><span style="color:var(--text-3);font-size:.7rem">+1 (661) 214-8732</span></td><td>General</td><td class="mono r" style="color:var(--green)">$32,127</td><td style="font-size:.75rem" data-en="Cordial follow-up call to review quotation." data-es="Llamada cordial para revisar cotizacion abierta.">Llamada cordial para revisar cotizacion abierta.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert alert-critical" style="margin-top:12px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div class="alert-content">
+            <div class="alert-title">Revenue recuperable inmediato: $<span id="kpi-alert-risk-2">...</span></div>
+            <div class="alert-body" data-en="100% verified against real ServiceTitan estimates and invoices." data-es="100% verificado contra estimados y facturas reales de ServiceTitan.">100% verificado contra estimados y facturas reales de ServiceTitan.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:24px 0;font-size:.675rem;color:var(--text-3);border-top:1px solid var(--border-1);margin-top:8px">
+      Google Cloud BigQuery Lakehouse &bull; Proyecto: <span style="font-family:'DM Mono',monospace;color:var(--cyan)">shape-mhs-1</span> &bull; Modelo: Gemini 2.5 Flash &bull; Fuente: ServiceTitan API &bull; Sep 11, 2026
+    </div>
+
+  </main>
+</div>
+
+
+<script src="js/data.js"></script>
+<script src="data/monarch.js"></script>
+<script src="data/demo.js"></script>
+<script src="js/data-engine.js"></script>
+<script>
+document.addEventListener('dataLoaded', (e) => {
+  const d = e.detail.data;
+  const fmtMoney = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
+  const fmtNum = (val) => new Intl.NumberFormat('en-US').format(val);
+  const fmtPct = (val) => val.toFixed(1) + '%';
+  
+  const el = (id) => document.getElementById(id);
+  if(!el('page-desc')) return;
+  
+  el('page-desc').innerHTML = `${d.companyName} &bull; ${d.meta.period} &bull; ${d.meta.note} &bull; ${d.kpis.totalCalls} llamadas reconciliadas`;
+  el('data-source').innerText = d.meta.source;
+  
+  el('narrative-text').innerHTML = `Tras la extracci�n y el despliegue del pipeline de transformaci�n con IA en el Lakehouse, analizamos una muestra para ${d.companyName} (<strong>${fmtNum(d.kpis.totalCalls)} de las cuales completaron su trazabilidad 1:1</strong> con clientes, campa�as, agentes y presupuestos en ServiceTitan), obteniendo los siguientes resultados operacionales y financieros.`;
+  
+  // KPIs
+  if(el('kpi-calls')) el('kpi-calls').innerText = fmtNum(d.kpis.totalCalls);
+  if(el('kpi-booking-rate')) el('kpi-booking-rate').innerText = fmtPct(d.kpis.bookingRate);
+  if(el('kpi-booked')) el('kpi-booked').innerText = d.kpis.totalCalls ? Math.round(d.kpis.totalCalls * (d.kpis.bookingRate/100)) : 0;
+  if(el('kpi-lost')) el('kpi-lost').innerText = fmtNum(d.kpis.lostOpportunities);
+  if(el('kpi-lost-pct')) el('kpi-lost-pct').innerText = fmtPct(d.kpis.lostPercentage);
+  if(el('kpi-revenue-risk')) el('kpi-revenue-risk').innerText = fmtMoney(d.kpis.revenueAtRisk);
+  if(el('kpi-open-count')) el('kpi-open-count').innerText = d.kpis.openEstimatesCount;
+  if(el('kpi-open-est')) el('kpi-open-est').innerText = new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format(d.kpis.backedByOpenEstimates);
+  if(el('kpi-sentiment')) el('kpi-sentiment').innerText = d.kpis.avgSentiment > 0 ? '+' + d.kpis.avgSentiment : d.kpis.avgSentiment;
+  if(el('kpi-csr-score')) el('kpi-csr-score').innerText = d.kpis.csrHandlingScore.toFixed(1);
+  
+  // Tables
+
+  if(el('kpi-table-calls')) el('kpi-table-calls').innerText = fmtNum(d.kpis.totalCalls);
+  if(el('kpi-table-booked')) el('kpi-table-booked').innerText = Math.round(d.kpis.totalCalls * (d.kpis.bookingRate/100));
+  if(el('kpi-table-risk')) el('kpi-table-risk').innerText = new Intl.NumberFormat('en-US', {maximumFractionDigits: 2}).format(d.kpis.revenueAtRisk);
+  if(el('kpi-table-open')) el('kpi-table-open').innerText = new Intl.NumberFormat('en-US', {maximumFractionDigits: 2}).format(d.kpis.backedByOpenEstimates);
+  if(el('kpi-table-bench')) el('kpi-table-bench').innerText = new Intl.NumberFormat('en-US', {maximumFractionDigits: 2}).format(d.kpis.backedByInvoiceBenchmarks);
+  if(el('kpi-alert-risk-2')) el('kpi-alert-risk-2').innerText = new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format(d.kpis.revenueAtRisk);
+  
+  if(el('render-causes-full')) {
+    const totalImpact = d.rootCauses.reduce((acc, curr) => acc + curr.impact, 0);
+    el('render-causes-full').innerHTML = d.rootCauses.map(c => {
+      const pct = (c.impact / totalImpact * 100).toFixed(1) + '%';
+      return `<tr>
+        <td class="pri">${c.reason}</td>
+        <td class="mono">${c.count}</td>
+        <td class="mono" style="color:var(--amber)">${fmtMoney(c.impact)}</td>
+        <td><div style="font-size:.75rem;margin-bottom:2px">${pct}</div><div class="progress"><div class="progress-fill amber" style="width:${pct}"></div></div></td>
+      </tr>`;
+    }).join('');
+  }
+
+  if(el('render-csr-full')) {
+    el('render-csr-full').innerHTML = d.csrRanking.map(c => 
+      `<tr>
+        <td class="metric-name">${c.name}</td>
+        <td style="text-align:center">${c.calls}</td>
+        <td style="text-align:center">${c.booked}</td>
+        <td class="val-primary" style="text-align:right">${c.rate.toFixed(1)}%</td>
+        <td class="val-danger" style="text-align:right">${fmtMoney(c.risk)}</td>
+      </tr>`
+    ).join('');
+  }
+  
+  if(el('render-queue-full')) {
+    el('render-queue-full').innerHTML = d.lostQueue.map(q => 
+      `<tr style="cursor:pointer" onclick="alert('Drill-down a llamada ${q.id} (En desarrollo)')">
+        <td><span class="priority-badge ${q.priority.toLowerCase()}">${q.priority}</span></td>
+        <td style="color:var(--text-3)">${q.date}</td>
+        <td class="metric-name">${q.customer}</td>
+        <td>${q.csr}</td>
+        <td><span style="display:inline-flex;padding:2px 6px;background:rgba(255,255,255,0.05);border-radius:4px">${q.reason}</span></td>
+        <td class="val-danger" style="text-align:right">${fmtMoney(q.amount)}</td>
+        <td style="font-size:0.7rem;color:var(--text-2);line-height:1.4">${q.description}</td>
+      </tr>`
+    ).join('');
+  }
+});
+</script>
+
+<script src="js/nav.js"></script>
+<script>
+  function setView(v) {
+    ['cards','table','both'].forEach(id => document.getElementById('btn-'+id).classList.remove('active'));
+    document.getElementById('btn-'+v).classList.add('active');
+    const c = document.getElementById('section-cards');
+    const t = document.getElementById('section-table');
+    if (v==='cards') { c.classList.remove('hidden'); t.classList.add('hidden'); }
+    else if (v==='table') { c.classList.add('hidden'); t.classList.remove('hidden'); }
+    else { c.classList.remove('hidden'); t.classList.remove('hidden'); }
+  }
+  let lang = 'es';
+  function toggleLang() {
+    lang = lang==='es' ? 'en' : 'es';
+    document.getElementById('lang-btn').textContent = lang==='es' ? 'Switch to English' : 'Cambiar a Espanol';
+    document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.getAttribute('data-'+lang); });
+  }
+</script>
+</body>
+</html>

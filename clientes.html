@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-title" content="Clientes &amp; LTV"><meta name="page-section" content="Crecimiento">
+  <title>Clientes &amp; LTV | Portal AI Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/layout.css"><link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<aside id="sidebar"></aside>
+<div class="main-wrapper">
+  <header id="topbar"></header>
+  <main class="page-content">
+    <!-- ══ EN PROCESO BANNER ══ -->
+    <div class="en-proceso-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div class="en-proceso-banner-body">
+        <div class="en-proceso-banner-title">Seccion en proceso — datos reales pendientes de integracion</div>
+        <div class="en-proceso-banner-text">
+          La estructura y esquema de esta seccion estan definidos. Los datos reales se integraran desde
+          <code>BigQuery</code> (ServiceTitan + QBO) una vez que las queries de esta capa esten validadas.
+          Los KPIs y tablas muestran <strong style="color:var(--amber)">—</strong> hasta entonces.
+        </div>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <h1>06 — Clientes &amp; Retención / LTV</h1>
+      <p class="page-desc">Modelo cliente-nivel · Adquisición · Ingresos futuros · Churn · Segmentación por valor · <span style="color:var(--amber)">DEMO</span></p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid-4">
+      <div class="kpi-card blue"><div class="kpi-label">Clientes Activos</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-trend up">▲ +312</span><span class="kpi-vs">este mes</span></div></div>
+      <div class="kpi-card green"><div class="kpi-label">Tasa de Retención</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-trend up">▲ +0.8%</span><span class="kpi-vs">vs mes ant.</span></div></div>
+      <div class="kpi-card purple"><div class="kpi-label">LTV Promedio</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-trend up">▲ +1.4%</span><span class="kpi-vs">vs ant.</span></div></div>
+      <div class="kpi-card amber"><div class="kpi-label">Tasa de Repetición</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-vs">clientes con 2+ jobs</span></div></div>
+    </div>
+
+    <!-- Segmentos + Retención por fuente -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Segmentación por Valor de Vida (LTV)</span><span class="demo-tag">DEMO</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Segmento</th><th class="r">Clientes</th><th class="r">% Total</th><th class="r">LTV Avg</th><th class="r">Retención</th></tr></thead>
+            <tbody id="seg-table">
+          <tr><td colspan="10" style="text-align:center;padding:20px 0">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <div class="empty-title">Datos en proceso de integracion</div>
+              <div class="empty-sub">Esta tabla se poblara desde BigQuery una vez validada la query correspondiente.</div>
+            </div>
+          </td></tr>
+        </tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px">
+          <div class="chart-wrap" style="height:180px"><canvas id="chart-seg-pie"></canvas></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Retención y LTV por Fuente de Adquisición</span><span class="demo-tag">DEMO</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Fuente</th><th class="r">Retención</th><th class="r">LTV Avg</th></tr></thead>
+            <tbody id="ret-source-table">
+          <tr><td colspan="10" style="text-align:center;padding:20px 0">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <div class="empty-title">Datos en proceso de integracion</div>
+              <div class="empty-sub">Esta tabla se poblara desde BigQuery una vez validada la query correspondiente.</div>
+            </div>
+          </td></tr>
+        </tbody>
+          </table>
+        </div>
+        <div class="alert alert-info" style="margin-top:12px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div class="alert-content"><div class="alert-title">Referral genera clientes de mayor retención</div><div class="alert-body">89% retención vs 61% de Yelp. Priorizar fuentes con alto LTV sobre volumen puro.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LTV Chart + Tendencia retención -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">LTV por Fuente — Comparativa</span><span class="demo-tag">DEMO</span></div>
+        <div class="chart-wrap" style="height:220px"><canvas id="chart-ltv-source"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Tendencia Retención vs Churn</span><span class="demo-tag">DEMO</span></div>
+        <div class="chart-wrap" style="height:220px"><canvas id="chart-retention"></canvas></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/data.js"></script><script src="js/nav.js"></script><script src="js/charts.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const segs = DEMO.client_segments;
+  const rets  = DEMO.retention_by_source;
+
+  // Segments table
+  const st = document.getElementById('seg-table');
+  segs.forEach(s => {
+    const retCls = s.retention >= 80 ? 'badge-green' : s.retention >= 65 ? 'badge-amber' : 'badge-red';
+    st.innerHTML += `<tr>
+      <td class="pri">${s.segment}</td>
+      <td class="mono r">${s.count.toLocaleString()}</td>
+      <td class="mono r">${s.pct.toFixed(1)}%</td>
+      <td class="mono r">${fmtDollar(s.ltv_avg)}</td>
+      <td class="r"><span class="badge ${retCls}">${s.retention}%</span></td>
+    </tr>`;
+  });
+
+  // Segments pie
+  doughnut('chart-seg-pie', segs.map(s=>s.segment), segs.map(s=>s.count),
+    [C.green, C.blue, C.amber, C.red], { legend:true }
+  );
+
+  // Retention by source table
+  const rt = document.getElementById('ret-source-table');
+  rets.forEach(r => {
+    const retCls = r.ret >= 80 ? 'badge-green' : r.ret >= 70 ? 'badge-amber' : 'badge-red';
+    rt.innerHTML += `<tr>
+      <td class="pri">${r.source}</td>
+      <td class="r"><span class="badge ${retCls}">${r.ret}%</span></td>
+      <td class="mono r">${fmtDollar(r.ltv)}</td>
+    </tr>`;
+  });
+
+  // LTV by source bar
+  hbarChart('chart-ltv-source', rets.map(r=>r.source), rets.map(r=>r.ltv),
+    rets.map(r => r.ret >= 80 ? C.green : r.ret >= 70 ? C.amber : C.red),
+    { xFmt: fmtDollarShort, ratio:false }
+  );
+
+  // Retention trend
+  const wks = ['Ago 18','Ago 25','Sep 1','Sep 8','Sep 14'];
+  lineChart('chart-retention', wks,
+    [
+      { label:'Retención %', data:[75.2,76.1,76.8,76.5,77.3], borderColor:C.green, fill:true },
+      { label:'Churn %',     data:[24.8,23.9,23.2,23.5,22.7], borderColor:C.red,   fill:false, borderDash:[3,2] },
+    ],
+    { legend:true, zero:false, yFmt:v=>v+'%' }
+  );
+});
+</script>
+</body></html>
+
+

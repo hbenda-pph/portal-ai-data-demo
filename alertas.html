@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-title" content="Alertas &amp; Acción"><meta name="page-section" content="Inteligencia">
+  <title>Alertas | Portal AI Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/layout.css"><link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<aside id="sidebar"></aside>
+<div class="main-wrapper">
+  <header id="topbar"></header>
+  <main class="page-content">
+    <!-- ══ EN PROCESO BANNER ══ -->
+    <div class="en-proceso-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div class="en-proceso-banner-body">
+        <div class="en-proceso-banner-title">Seccion en proceso — datos reales pendientes de integracion</div>
+        <div class="en-proceso-banner-text">
+          La estructura y esquema de esta seccion estan definidos. Los datos reales se integraran desde
+          <code>BigQuery</code> (ServiceTitan + QBO) una vez que las queries de esta capa esten validadas.
+          Los KPIs y tablas muestran <strong style="color:var(--amber)">—</strong> hasta entonces.
+        </div>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <h1>08 — Cola de Acción &amp; Alertas Automáticas</h1>
+      <p class="page-desc">Detectar anomalías → Investigar → Recomendar → Aprobación humana · <span style="color:var(--amber)">DEMO</span></p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid-4">
+      <div class="kpi-card red"><div class="kpi-label">Alertas Críticas</div><div class="kpi-value" style="color:var(--red)">2</div><div class="kpi-footer"><span class="kpi-vs">requieren acción hoy</span></div></div>
+      <div class="kpi-card amber"><div class="kpi-label">Alertas de Advertencia</div><div class="kpi-value">3</div><div class="kpi-footer"><span class="kpi-vs">monitorear</span></div></div>
+      <div class="kpi-card blue"><div class="kpi-label">Alertas Info</div><div class="kpi-value">4</div><div class="kpi-footer"><span class="kpi-vs">oportunidades</span></div></div>
+      <div class="kpi-card green"><div class="kpi-label">Resueltas esta semana</div><div class="kpi-value">6</div><div class="kpi-footer"><span class="kpi-vs">cerradas correctamente</span></div></div>
+    </div>
+
+    <!-- Alertas activas -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Cola de Alertas Activas</span>
+        <span class="badge badge-red">9 abiertas</span>
+      </div>
+      <div id="all-alerts"></div>
+    </div>
+
+    <!-- Cola de Acción -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Cola de Acción — Pendiente de Aprobación</span><span class="demo-tag">DEMO</span></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Prioridad</th><th>Acción Recomendada</th><th>Responsable</th><th class="r">Impacto Est.</th><th>Estado</th><th>Acción</th></tr></thead>
+          <tbody id="action-queue">
+          <tr><td colspan="10" style="text-align:center;padding:20px 0">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <div class="empty-title">Datos en proceso de integracion</div>
+              <div class="empty-sub">Esta tabla se poblara desde BigQuery una vez validada la query correspondiente.</div>
+            </div>
+          </td></tr>
+        </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Historial alertas -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Historial — Últimas 2 semanas</span><span class="demo-tag">DEMO</span></div>
+      <div class="chart-wrap" style="height:180px"><canvas id="chart-alert-hist"></canvas></div>
+    </div>
+
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/data.js"></script><script src="js/nav.js"></script><script src="js/charts.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const svgs = {
+    critical:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+    warning: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+    info:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`,
+    success: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
+  };
+
+  const allAlerts = [
+    ...DEMO.alerts,
+    { level:'warning', title:'Zona Central: utilización cayó a 61% (meta: 75%)', body:'12.3h no facturadas. Revisar scheduling y asignación de rutas.' },
+    { level:'info',    title:'Clientes Referral tienen 89% retención vs 61% Yelp', body:'Oportunidad: programa formal de referidos puede mejorar LTV de adquisición +48%.' },
+    { level:'info',    title:'Organic/SEO: CPL más bajo del portfolio ($26.3)', body:'Vs $100 Google Ads. Incrementar inversión en contenido orgánico tiene ROI 51x.' },
+    { level:'info',    title:'North zone alcanzó record de utilización (87%)', body:'Considerar expansión de capacidad: 1-2 técnicos adicionales en zona North.' },
+  ];
+
+  const aa = document.getElementById('all-alerts');
+  allAlerts.forEach(a => {
+    aa.innerHTML += `
+      <div class="alert alert-${a.level}">
+        ${svgs[a.level]}
+        <div class="alert-content">
+          <div class="alert-title">${a.title}</div>
+          <div class="alert-body">${a.body}</div>
+        </div>
+      </div>`;
+  });
+
+  // Action queue
+  const aq = document.getElementById('action-queue');
+  [
+    ['critical','Sesión de coaching urgente: Carlos M. y Lisa K.','Operations Lead','+$38K/sem','Pendiente'],
+    ['critical','Follow-up inmediato: 43 llamadas lost-bookable','CSR Team','+$122K','Pendiente'],
+    ['warning', 'Revisar campaña Google Ads: CPC +22%','Marketing','Evitar -$8K','En revisión'],
+    ['info',    'Propuesta programa de referidos formal','Marketing','+$45K LTV','Borrador'],
+    ['info',    'Análisis expansión capacidad zona North','Operations','+$80K/mes','Pendiente'],
+  ].forEach(([lvl,accion,resp,imp,estado]) => {
+    const lvlCls = lvl === 'critical' ? 'badge-red' : lvl === 'warning' ? 'badge-amber' : 'badge-blue';
+    const estCls = estado === 'Pendiente' ? 'badge-amber' : estado === 'En revisión' ? 'badge-blue' : 'badge-gray';
+    aq.innerHTML += `<tr>
+      <td><span class="badge ${lvlCls}">${lvl.toUpperCase()}</span></td>
+      <td class="pri">${accion}</td>
+      <td>${resp}</td>
+      <td class="mono r">${imp}</td>
+      <td><span class="badge ${estCls}">${estado}</span></td>
+      <td><button style="padding:3px 10px;border:1px solid var(--accent);border-radius:5px;color:var(--accent);font-size:0.7rem;font-weight:600;cursor:pointer">Revisar</button></td>
+    </tr>`;
+  });
+
+  // Historial chart
+  const days = ['Sep 1','Sep 2','Sep 3','Sep 4','Sep 7','Sep 8','Sep 9','Sep 10','Sep 11','Sep 14'];
+  barChart('chart-alert-hist', days,
+    [
+      { label:'Críticas',    data:[1,0,2,0,1,2,1,0,1,2], backgroundColor: C.red },
+      { label:'Advertencias',data:[2,1,1,2,2,3,2,1,2,3], backgroundColor: C.amber },
+      { label:'Info',        data:[3,2,2,3,4,4,3,2,3,4], backgroundColor: C.blue },
+    ],
+    { stacked:true, legend:true }
+  );
+});
+</script>
+</body></html>
+
+

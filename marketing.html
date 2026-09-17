@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="page-title" content="Marketing &amp; Atribución"><meta name="page-section" content="Crecimiento">
+  <title>Marketing | Portal AI Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/layout.css"><link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<aside id="sidebar"></aside>
+<div class="main-wrapper">
+  <header id="topbar"></header>
+  <main class="page-content">
+    <!-- ══ EN PROCESO BANNER ══ -->
+    <div class="en-proceso-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div class="en-proceso-banner-body">
+        <div class="en-proceso-banner-title">Seccion en proceso — datos reales pendientes de integracion</div>
+        <div class="en-proceso-banner-text">
+          La estructura y esquema de esta seccion estan definidos. Los datos reales se integraran desde
+          <code>BigQuery</code> (ServiceTitan + QBO) una vez que las queries de esta capa esten validadas.
+          Los KPIs y tablas muestran <strong style="color:var(--amber)">—</strong> hasta entonces.
+        </div>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <h1>04 — Marketing &amp; Atribución</h1>
+      <p class="page-desc">ROI por fuente · Gasto vs beneficio · Funnel de adquisición · Clientes rentables · <span style="color:var(--amber)">DEMO</span></p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid-4">
+      <div class="kpi-card blue"><div class="kpi-label">Gasto Mktg / Semana</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-trend down">▲ +1.6%</span><span class="kpi-vs">vs ant.</span></div></div>
+      <div class="kpi-card green"><div class="kpi-label">Revenue Atribuido</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-vs">de fuentes trackeable</span></div></div>
+      <div class="kpi-card amber"><div class="kpi-label">CAC Promedio</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-vs">costo por cliente</span></div></div>
+      <div class="kpi-card purple"><div class="kpi-label">Mejor ROI</div><div class="kpi-value"><span class="pending">—</span></div><div class="kpi-footer"><span class="kpi-vs">Organic / SEO</span></div></div>
+    </div>
+
+    <!-- ROI Table + Doughnut -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">ROI por Fuente de Marketing</span><span class="demo-tag">DEMO</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Fuente</th><th class="r">Gasto</th><th class="r">Leads</th><th class="r">CPL</th><th class="r">Revenue</th><th class="r">ROI</th><th class="r">Margen</th></tr></thead>
+            <tbody id="mkt-table">
+          <tr><td colspan="10" style="text-align:center;padding:20px 0">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <div class="empty-title">Datos en proceso de integracion</div>
+              <div class="empty-sub">Esta tabla se poblara desde BigQuery una vez validada la query correspondiente.</div>
+            </div>
+          </td></tr>
+        </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Revenue por Fuente</span><span class="demo-tag">DEMO</span></div>
+        <div class="chart-wrap" style="height:250px"><canvas id="chart-mkt-pie"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Gasto vs Revenue trend -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Gasto Marketing vs Revenue — 5 semanas</span><span class="demo-tag">DEMO</span></div>
+      <div class="chart-wrap" style="height:220px"><canvas id="chart-mkt-trend"></canvas></div>
+    </div>
+
+    <!-- Funnel adquisición + Insights -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Funnel de Adquisición</span><span class="demo-tag">DEMO</span></div>
+        <div id="acq-funnel"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Insights Clave</span></div>
+        <div class="alert alert-success" style="margin-bottom:7px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div class="alert-content"><div class="alert-title">SEO es el canal más eficiente</div><div class="alert-body">CPL $26.3 vs $100 de Paid. ROI 51x. Invertir más en contenido orgánico.</div></div>
+        </div>
+        <div class="alert alert-warning" style="margin-bottom:7px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div class="alert-content"><div class="alert-title">Google Ads CPC subió 22%</div><div class="alert-body">Sin mejora en conversión. Revisar keywords y segmentación. Budget en riesgo.</div></div>
+        </div>
+        <div class="alert alert-info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div class="alert-content"><div class="alert-title">Referral: 0 gasto, mayor margen (37.4%)</div><div class="alert-body">Implementar programa formal de referidos. Mayor LTV y mejor retención que paid.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/data.js"></script><script src="js/nav.js"></script><script src="js/charts.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const mk = DEMO.marketing;
+
+  // Marketing table
+  const mt = document.getElementById('mkt-table');
+  mk.forEach(m => {
+    const roiTxt = m.roi ? m.roi.toFixed(1)+'x' : 'N/A (orgánico)';
+    const roiCls = m.roi > 30 ? 'badge-green' : m.roi > 15 ? 'badge-amber' : 'badge-gray';
+    mt.innerHTML += `<tr>
+      <td class="pri">${m.source}</td>
+      <td class="mono r">${m.spend ? fmtDollarShort(m.spend) : '—'}</td>
+      <td class="mono r">${m.leads}</td>
+      <td class="mono r">${m.cpl ? '$'+m.cpl.toFixed(0) : '—'}</td>
+      <td class="mono r">${fmtDollarShort(m.revenue)}</td>
+      <td class="r"><span class="badge ${roiCls}">${roiTxt}</span></td>
+      <td class="mono r">${m.margin.toFixed(1)}%</td>
+    </tr>`;
+  });
+
+  // Pie
+  doughnut('chart-mkt-pie', mk.map(m=>m.source), mk.map(m=>m.revenue),
+    [C.blue, C.cyan, C.green, C.purple, C.amber, C.red], { legend:true }
+  );
+
+  // Trend
+  const d = DEMO.mktg_weekly;
+  lineChart('chart-mkt-trend', d.labels,
+    [
+      { label:'Gasto Mktg', data: d.spend,   borderColor: C.red,   fill:false, yAxisID:'y' },
+      { label:'Revenue',    data: d.revenue, borderColor: C.green, fill:false, yAxisID:'y1' },
+    ],
+    { legend:true, zero:false, extra:{ scales:{
+      y:  { position:'left',  grid:{color:C.grid}, ticks:{color:C.text,callback:fmtDollarShort,font:{size:10}} },
+      y1: { position:'right', grid:{display:false}, ticks:{color:C.text,callback:fmtDollarShort,font:{size:10}} },
+    }}}
+  );
+
+  // Adquisición funnel
+  const af = document.getElementById('acq-funnel');
+  const steps = [
+    { label:'Impressions',  value:'1.24M', w:100, color:C.blue },
+    { label:'Clicks',       value:'48,200', w:73,  color:C.cyan },
+    { label:'Leads',        value:'2,840',  w:52,  color:C.green },
+    { label:'Llamadas',     value:'2,104',  w:38,  color:C.amber },
+    { label:'Bookings',     value:'1,352',  w:25,  color:C.amber },
+    { label:'Jobs Pagados', value:'1,187',  w:22,  color:C.red },
+  ];
+  steps.forEach(s => {
+    af.innerHTML += `
+      <div style="margin-bottom:9px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+          <span style="font-size:0.775rem;color:var(--text-2)">${s.label}</span>
+          <span style="font-size:0.8rem;font-weight:700;color:var(--text-1);font-family:'DM Mono',monospace">${s.value}</span>
+        </div>
+        <div class="progress"><div class="progress-fill" style="width:${s.w}%;background:${s.color}"></div></div>
+      </div>`;
+  });
+});
+</script>
+</body></html>
+
+

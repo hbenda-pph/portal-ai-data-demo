@@ -1,0 +1,123 @@
+/* ============================================
+   BASE.CSS — Variables, Reset, Tipografía
+   Portal AI Data | Platform Partners
+   ============================================ */
+
+:root {
+  /* ── Backgrounds ── */
+  --bg-app:        #060B14;
+  --bg-surface:    #0D1525;
+  --bg-surface-2:  #132035;
+  --bg-surface-3:  #1A2D47;
+
+  /* ── Accentos ── */
+  --accent:        #3B7EF5;
+  --accent-hover:  #2D6FE0;
+  --accent-muted:  rgba(59,126,245,0.12);
+  --green:         #10B981;
+  --green-muted:   rgba(16,185,129,0.12);
+  --amber:         #F59E0B;
+  --amber-muted:   rgba(245,158,11,0.12);
+  --red:           #EF4444;
+  --red-muted:     rgba(239,68,68,0.12);
+  --cyan:          #06B6D4;
+  --cyan-muted:    rgba(6,182,212,0.12);
+  --purple:        #8B5CF6;
+  --purple-muted:  rgba(139,92,246,0.12);
+
+  /* ── Texto ── */
+  --text-1:        #EEF4FF;
+  --text-2:        #8FA3BE;
+  --text-3:        #3E5574;
+
+  /* ── Bordes ── */
+  --border-1:      rgba(255,255,255,0.055);
+  --border-2:      rgba(255,255,255,0.10);
+
+  /* ── Dimensiones ── */
+  --sidebar-w:     252px;
+  --topbar-h:      52px;
+  --radius-sm:     6px;
+  --radius-md:     10px;
+  --radius-lg:     14px;
+
+  /* ── Sombras ── */
+  --shadow-sm:     0 1px 4px rgba(0,0,0,0.45);
+  --shadow-md:     0 4px 18px rgba(0,0,0,0.55);
+  --shadow-lg:     0 8px 36px rgba(0,0,0,0.65);
+
+  /* ── Transiciones ── */
+  --t-fast:        140ms ease;
+  --t-med:         240ms ease;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-app);
+  color: var(--text-1);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  display: flex;
+}
+a    { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+input, select, textarea { font-family: inherit; font-size: inherit; background: none; border: none; outline: none; color: var(--text-1); }
+ul, ol { list-style: none; }
+
+/* ── Tipografía ── */
+.t-display { font-size: 2.25rem; font-weight: 800; letter-spacing: -0.035em; line-height: 1.1; }
+.t-h1      { font-size: 1.625rem; font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; }
+.t-h2      { font-size: 1.2rem;   font-weight: 600; letter-spacing: -0.015em; }
+.t-h3      { font-size: 0.9375rem; font-weight: 600; }
+.t-body    { font-size: 0.875rem; }
+.t-small   { font-size: 0.75rem; }
+.t-label   { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; }
+.t-mono    { font-family: 'DM Mono', 'Courier New', monospace; }
+.t-muted   { color: var(--text-2); }
+.t-dim     { color: var(--text-3); }
+.t-green   { color: var(--green); }
+.t-red     { color: var(--red); }
+.t-amber   { color: var(--amber); }
+
+/* ── Utilidades ── */
+.flex           { display: flex; }
+.flex-col       { display: flex; flex-direction: column; }
+.items-center   { align-items: center; }
+.items-start    { align-items: flex-start; }
+.justify-between{ justify-content: space-between; }
+.justify-center { justify-content: center; }
+.gap-1  { gap: 4px; }
+.gap-2  { gap: 8px; }
+.gap-3  { gap: 12px; }
+.gap-4  { gap: 16px; }
+.gap-6  { gap: 24px; }
+.gap-8  { gap: 32px; }
+.w-full { width: 100%; }
+.ml-auto{ margin-left: auto; }
+.mt-1   { margin-top: 4px; }
+.mt-2   { margin-top: 8px; }
+.mt-4   { margin-top: 16px; }
+.mb-2   { margin-bottom: 8px; }
+.mb-4   { margin-bottom: 16px; }
+
+/* ── Tag Demo ── */
+.demo-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px;
+  background: var(--amber-muted);
+  color: var(--amber);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 100px;
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+}
+
+/* ── Scrollbar global ── */
+::-webkit-scrollbar        { width: 4px; height: 4px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--border-2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
