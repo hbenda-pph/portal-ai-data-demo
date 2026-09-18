@@ -27,7 +27,7 @@ ALLOWED_EMAILS = [
 app = FastAPI(
     title="Portal AI Data Platform (DEMO)",
     description="Multi-Tenant Corporate AI Data Platform connected to BigQuery Lakehouse",
-    version="1.1.0"
+    version="1.2.0"
 )
 
 app.add_middleware(
@@ -42,14 +42,52 @@ app.add_middleware(
 CACHE_TTL_SECONDS = 60
 CACHE_STORE: Dict[str, Dict[str, Any]] = {}
 
-# Companies Catalog Cache (10m TTL)
+# Master Companies Catalog from pph-central.settings.companies
+MASTER_COMPANIES_CATALOG: List[Dict[str, Any]] = [
+    {"id": "shape-mhs-1", "company_id": 1, "name": "Monarch Home Services", "short_name": "MONARCH", "project": "shape-mhs-1", "state": "CA", "timezone": "PST", "active": True, "display": "[CA] Shape MHS - Monarch"},
+    {"id": "shape-chc-2", "company_id": 2, "name": "Capital", "short_name": "CAPITAL", "project": "shape-chc-2", "state": "WI", "timezone": "CST", "active": True, "display": "[WI] Shape CHC - Capital"},
+    {"id": "shape-tucson-3", "company_id": 3, "name": "Fusion", "short_name": "FUSION", "project": "shape-tucson-3", "state": "AZ", "timezone": "MST", "active": True, "display": "[AZ] Shape TUCSON - Fusion"},
+    {"id": "shape-otm-4", "company_id": 4, "name": "Over the Moon", "short_name": "OVER THE MOON", "project": "shape-otm-4", "state": "WI", "timezone": "CST", "active": True, "display": "[WI] Shape OTM - Over the Moon"},
+    {"id": "shape-aone-5", "company_id": 5, "name": "A-One Air", "short_name": "A-ONE AIR", "project": "shape-aone-5", "state": "WA", "timezone": "PST", "active": True, "display": "[WA] Shape AONE - A One"},
+    {"id": "shape-lba-6", "company_id": 6, "name": "LBA", "short_name": "LBA", "project": "shape-lba-6", "state": "KS", "timezone": "CST", "active": True, "display": "[KS] Shape LBA - LBA"},
+    {"id": "shape-lbca-7", "company_id": 7, "name": "Prodigy Plumbing", "short_name": "PRODIGY PLUMBING", "project": "shape-lbca-7", "state": "CA", "timezone": "PST", "active": True, "display": "[CA] Shape LBCA - Prodigy Plumbing"},
+    {"id": "shape-dear-8", "company_id": 8, "name": "Dear Services", "short_name": "DEAR", "project": "shape-dear-8", "state": "WA", "timezone": "PST", "active": True, "display": "[WA] Shape DEAR - Dear Services"},
+    {"id": "shape-hhwi-9", "company_id": 9, "name": "Healthy Home", "short_name": "HEALTHY HOME", "project": "shape-hhwi-9", "state": "WI", "timezone": "CST", "active": True, "display": "[WI] Shape HHWI - Healthy Home"},
+    {"id": "shape-cls-10", "company_id": 10, "name": "Chad Love", "short_name": "CHAD LOVE", "project": "shape-cls-10", "state": "NC", "timezone": "EST", "active": True, "display": "[NC] Shape CLS - Chad Love"},
+    {"id": "shape-hecs-11", "company_id": 11, "name": "H&E Comfort", "short_name": "H&E Comfort", "project": "shape-hecs-11", "state": "LA", "timezone": "CST", "active": True, "display": "[LA] Shape HECS - H&E Comfort"},
+    {"id": "shape-jsp-12", "company_id": 12, "name": "John Stevenson", "short_name": "JSP", "project": "shape-jsp-12", "state": "CA", "timezone": "PST", "active": True, "display": "[CA] Shape JSP - John Stevenson"},
+    {"id": "shape-ico-13", "company_id": 13, "name": "ICE", "short_name": "ICE COOLING", "project": "shape-ico-13", "state": "FL", "timezone": "EST", "active": True, "display": "[FL] Shape ICO - ICE"},
+    {"id": "shape-indy-14", "company_id": 14, "name": "Complete Comfort", "short_name": "COMPLETE COMFORT", "project": "shape-indy-14", "state": "IN", "timezone": "EST", "active": True, "display": "[IN] Shape INDY - Complete Comfort"},
+    {"id": "shape-lex-15", "company_id": 15, "name": "Synergy Home", "short_name": "SYNERGY HOME", "project": "shape-lex-15", "state": "KY", "timezone": "EST", "active": True, "display": "[KY] Shape LEX - Synergy Home"},
+    {"id": "shape-hze-16", "company_id": 16, "name": "Howze Plumbing", "short_name": "HOWZE", "project": "shape-hze-16", "state": "TX", "timezone": "CST", "active": True, "display": "[TX] Shape HZE - Howze Plumbing"},
+    {"id": "shape-ncva-17", "company_id": 17, "name": "Prostar", "short_name": "PROSTAR SERVICES", "project": "shape-ncva-17", "state": "NC", "timezone": "EST", "active": True, "display": "[NC] Shape NCVA - Prostar"},
+    {"id": "shape-ahs-18", "company_id": 18, "name": "Absolute Plumbing", "short_name": "ABSOLUTE PLUMBING", "project": "shape-ahs-18", "state": "GA", "timezone": "EST", "active": True, "display": "[GA] Shape AHS - Absolute Plumbing"},
+    {"id": "shape-ppp-19", "company_id": 19, "name": "Personal PHC", "short_name": "PERSONAL", "project": "shape-ppp-19", "state": "CA", "timezone": "PST", "active": True, "display": "[CA] Shape PPP - Personal PHC"},
+    {"id": "shape-mgy-20", "company_id": 20, "name": "My Guy", "short_name": "MY GUY", "project": "shape-mgy-20", "state": "CA", "timezone": "PST", "active": True, "display": "[CA] Shape MGY - My Guy"},
+    {"id": "shape-ns-21", "company_id": 21, "name": "Northstar Services", "short_name": "NORTHSTAR", "project": "shape-ns-21", "state": "MN", "timezone": "CST", "active": True, "display": "[MN] Shape NS - Northstar Services"},
+    {"id": "shape-sst-22", "company_id": 22, "name": "Supreme Service", "short_name": "SUPREME", "project": "shape-sst-22", "state": "MD", "timezone": "EST", "active": True, "display": "[MD] Shape SST - Supreme Service"},
+    {"id": "shape-jfsp-23", "company_id": 23, "name": "Spartan Plumbing", "short_name": "SPARTAN", "project": "shape-jfsp-23", "state": "OH", "timezone": "EST", "active": True, "display": "[OH] Shape JFSP - Spartan Plumbing"},
+    {"id": "shape-pthc-24", "company_id": 24, "name": "Perfect Temp", "short_name": "PERFECT TEMP", "project": "shape-pthc-24", "state": "IL", "timezone": "CST", "active": True, "display": "[IL] Shape PTHC - Perfect Temp"},
+    {"id": "shape-phs-25", "company_id": 25, "name": "Pilot Plumbing", "short_name": "PILOT", "project": "shape-phs-25", "state": "TX", "timezone": "CST", "active": False, "display": "[TX] Shape PHS - Pilot Plumbing"},
+    {"id": "shape-cos-26", "company_id": 26, "name": "Jantz Cosmic Comfort", "short_name": "COSMIC COMFORT", "project": "shape-cos-26", "state": "CA", "timezone": "PST", "active": True, "display": "[CA] Shape COS - Jantz Cosmic Comfort"},
+    {"id": "shape-gem-27", "company_id": 27, "name": "Green Energy", "short_name": "GREEN ENERGY", "project": "shape-gem-27", "state": "MA", "timezone": "EST", "active": True, "display": "[MA] Shape GEM - Green Energy"},
+    {"id": "shape-newe-28", "company_id": 28, "name": "Sharp PHC", "short_name": "SHARP", "project": "shape-newe-28", "state": "MA", "timezone": "EST", "active": True, "display": "[MA] Shape NEWE - Sharp PHC"},
+    {"id": "shape-acga-29", "company_id": 29, "name": "Daffy Ducts", "short_name": "DAFFY DUCTS", "project": "shape-acga-29", "state": "GA", "timezone": "EST", "active": True, "display": "[GA] Shape ACGA - Daffy Ducts"},
+    {"id": "shape-jrb-30", "company_id": 30, "name": "JR Bolton", "short_name": "JR BOLTON", "project": "shape-jrb-30", "state": "GA", "timezone": "EST", "active": True, "display": "[GA] Shape JRB - JR Bolton"},
+    {"id": "shape-ida-31", "company_id": 31, "name": "Criterion", "short_name": "CRITERION PLUMBERS", "project": "shape-ida-31", "state": "ID", "timezone": "MST", "active": True, "display": "[ID] Shape IDA - Criterion"},
+    {"id": "air-today-llc-37", "company_id": 37, "name": "Air Today LLC", "short_name": "AIR TODAY", "project": "air-today-llc-37", "state": "FL", "timezone": "EST", "active": True, "display": "[FL] Air Today LLC"},
+    {"id": "personalized-power-service-38", "company_id": 38, "name": "Personalized Power Service", "short_name": "Personalized Power Service (PPS)", "project": "personalized-power-service-38", "state": "FL", "timezone": "EST", "active": True, "display": "[FL] Personalized Power Service"}
+]
+
 COMPANIES_CACHE: Dict[str, Any] = {
     "timestamp": 0,
-    "list": [],
-    "map": {}
+    "list": MASTER_COMPANIES_CATALOG,
+    "map": {c["id"]: c for c in MASTER_COMPANIES_CATALOG}
 }
+COMPANIES_CACHE["map"]["mhs"] = COMPANIES_CACHE["map"]["shape-mhs-1"]
+COMPANIES_CACHE["map"]["monarch"] = COMPANIES_CACHE["map"]["shape-mhs-1"]
 
-# BigQuery Client Initialization
+# BigQuery Client Initialization with default billing project (platform-partners-des)
 try:
     bq_client = bigquery.Client()
 except Exception as e:
@@ -154,10 +192,10 @@ def logout(response: Response):
 
 
 def load_companies_catalog() -> List[Dict[str, Any]]:
-    """Fetch active portfolio companies dynamically from pph-central.settings.companies."""
+    """Fetch active portfolio companies dynamically from pph-central.settings.companies with robust fallback."""
     global COMPANIES_CACHE
     now = time.time()
-    if COMPANIES_CACHE["list"] and (now - COMPANIES_CACHE["timestamp"] < 600):
+    if COMPANIES_CACHE["list"] and (now - COMPANIES_CACHE["timestamp"] < 600) and len(COMPANIES_CACHE["list"]) > 5:
         return COMPANIES_CACHE["list"]
 
     query = """
@@ -174,7 +212,7 @@ def load_companies_catalog() -> List[Dict[str, Any]]:
     ORDER BY company_id ASC;
     """
     try:
-        client = bq_client or bigquery.Client(project="pph-central")
+        client = bq_client or bigquery.Client()
         query_job = client.query(query)
         results = list(query_job.result())
 
@@ -200,7 +238,6 @@ def load_companies_catalog() -> List[Dict[str, Any]]:
             companies_list.append(c_info)
             companies_map[proj] = c_info
             
-            # Legacy & short aliases
             if proj == "shape-mhs-1":
                 companies_map["mhs"] = c_info
                 companies_map["monarch"] = c_info
@@ -213,14 +250,9 @@ def load_companies_catalog() -> List[Dict[str, Any]]:
             }
             return companies_list
     except Exception as e:
-        print(f"Error querying pph-central.settings.companies: {e}")
+        print(f"Warning: query pph-central.settings.companies: {e}")
 
-    # Fallback default catalog
-    if COMPANIES_CACHE["list"]:
-        return COMPANIES_CACHE["list"]
-    return [
-        {"id": "shape-mhs-1", "company_id": 1, "name": "Monarch Home Services", "short_name": "MONARCH", "project": "shape-mhs-1", "state": "CA", "timezone": "PST", "active": True, "display": "[CA] Shape MHS - Monarch"},
-    ]
+    return MASTER_COMPANIES_CATALOG
 
 
 def get_tenant_info(tenant: str) -> Dict[str, Any]:
@@ -232,7 +264,7 @@ def get_tenant_info(tenant: str) -> Dict[str, Any]:
     for c in catalog:
         if str(c.get("company_id")) == str(tenant) or c.get("id") == tenant or c.get("project") == tenant:
             return c
-    return cmap.get("shape-mhs-1", {"id": "shape-mhs-1", "name": "Monarch Home Services", "project": "shape-mhs-1"})
+    return cmap.get("shape-mhs-1", MASTER_COMPANIES_CATALOG[0])
 
 
 def query_bigquery_live(tenant_id: str) -> Dict[str, Any]:
@@ -241,7 +273,8 @@ def query_bigquery_live(tenant_id: str) -> Dict[str, Any]:
     project_id = t_info.get("project", "shape-mhs-1")
     company_name = t_info.get("name", "Company")
 
-    client = bq_client or bigquery.Client(project=project_id)
+    # Use default client (billed to platform-partners-des)
+    client = bq_client or bigquery.Client()
 
     master_query = f"""
     WITH dedup_calls AS (
@@ -430,7 +463,6 @@ def query_bigquery_live(tenant_id: str) -> Dict[str, Any]:
     causes_res = list(client.query(causes_query).result())
     root_causes = [{"reason": r["reason"], "impact": float(r["impact"] or 0), "count": int(r["count"] or 0)} for r in causes_res]
 
-    # Fallback root causes if empty
     if not root_causes:
         root_causes = [
             {"reason": "No Availability / Capacity", "impact": round(revenue_at_risk * 0.45, 2), "count": max(int(lost_opps * 0.45), 1)},
@@ -542,8 +574,8 @@ def query_bigquery_live(tenant_id: str) -> Dict[str, Any]:
       FROM (SELECT * FROM dedup_calls WHERE rn = 1) c
       LEFT JOIN (SELECT * FROM dedup_recordings WHERE rn = 1) t ON c.lead_call_id = t.lead_call_id
       LEFT JOIN (SELECT * FROM dedup_jobs WHERE rn = 1) j ON c.lead_call_id = j.lead_call_id
-      LEFT JOIN `{project_id}.silver.vw_customer` cust ON c.customer_id = cust.id
-      LEFT JOIN open_estimates est ON c.customer_id = est.customer_id AND est.rn = 1
+      LEFT JOIN `{project_id}.silver.vw_call` raw_c ON c.lead_call_id = raw_c.lead_call_id
+      LEFT JOIN open_estimates est ON raw_c.lead_call_customer_id = est.customer_id AND est.rn = 1
       LEFT JOIN `shape-mhs-1.gold.dm_service_benchmarks` bm ON t.service_requested_category = bm.service_category
     )
     SELECT 
