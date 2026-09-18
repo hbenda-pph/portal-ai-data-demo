@@ -4,20 +4,24 @@
 **Entorno Nube:** DEV (`platform-partners-des`)  
 **Servicio Cloud Run:** `portal-ai-data-demo`  
 **URL Oficial DEMO:** [https://portal-ai-data-demo-514633608081.us-central1.run.app/](https://portal-ai-data-demo-514633608081.us-central1.run.app/)  
-**Seguridad:** 🔒 **Acceso Empresarial Seguro y Simplificado**  
+**Catálogo de Empresas:** 🏢 `pph-central.settings.companies` (30+ Empresas)  
 **Idiomas:** **Inglés (Predeterminado)** y **Español** con conmutador `[ EN | ES ]`  
-**Estado:** 🟢 Protegido y Conectado en Tiempo Real a BigQuery
+**Estado:** 🟢 Conectado en Tiempo Real a BigQuery con Selector Multi-Empresa
 
 ---
 
-## 🔒 Control de Acceso Empresarial Simplificado
+## 🏢 Selector Dinámico de Compañías
 
-1. **Pantalla de Inicio de Sesión Limpia y Minimalista (`Portal/login.html`):**
-   - Interfaz sobria y elegante con campos de **Email** y **Access Key**.
-   - Mensajes estándar y discretos de seguridad (*"Invalid credentials or unauthorized account"*).
-   - Soporte bilingüe EN/ES.
-2. **Validación en Backend (`Portal/server.py`):**
-   - Validación de dominio y credenciales autorizadas en segundo plano sin exponer detalles.
-   - Emisión de cookie segura cifrada (`HTTPOnly`).
-3. **Cierre de Sesión:**
-   - Clic en el avatar de usuario en la barra superior para cerrar sesión.
+1. **Catálogo de Empresas en BigQuery:**
+   - Lee automáticamente la tabla `pph-central.settings.companies`.
+   - Soporta todas las empresas activas del portafolio (`shape-mhs-1`, `shape-chc-2`, `shape-tucson-3`, `shape-dear-8`, `shape-otm-4`, `shape-aone-5`, etc.).
+2. **Experiencia en el Frontend:**
+   - Selector en la barra superior con etiquetas organizadas por estado:
+     - `[CA] Shape MHS - Monarch`
+     - `[WI] Shape CHC - Capital`
+     - `[AZ] Shape TUCSON - Fusion`
+     - `[TX] Shape HZE - Howze Plumbing`
+     - `[FL] Shape ICO - ICE`
+     - ... y todas las empresas del holding.
+   - Al cambiar de empresa en el selector, el portal consulta inmediatamente las llamadas y auditorías de ese proyecto en BigQuery y refresca todos los tableros.
+   - La selección se guarda en memoria local para que al navegar entre pestañas no se pierda la empresa activa.

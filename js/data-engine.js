@@ -1,14 +1,14 @@
 /**
- * data-engine.js — Motor de carga de datos dinámico
+ * data-engine.js — Motor de carga de datos dinámico y multi-empresa
  * Portal AI Data Exploration & Intelligence
+ * Conectado dinámicamente con pph-central.settings.companies y BigQuery
  */
 
 class PortalDataEngine {
   constructor() {
-    this.currentCompany = 'mhs';
+    this.currentCompany = localStorage.getItem('portal_selected_company') || 'shape-mhs-1';
     this.companies = [
-      { id: 'mhs', name: 'Monarch Home Services' },
-      { id: 'demo', name: 'Apex Comfort Systems (Demo)' }
+      { id: 'shape-mhs-1', name: 'Monarch Home Services', display: '[CA] Shape MHS - Monarch' }
     ];
     this.data = null;
     
@@ -19,8 +19,28 @@ class PortalDataEngine {
   }
 
   async init() {
+    await this.fetchCompanies();
     this.injectSelector();
     await this.loadCompanyData(this.currentCompany);
+  }
+
+  async fetchCompanies() {
+    try {
+      const res = await fetch('/api/companies');
+      if (res.ok) {
+        const list = await res.json();
+        if (Array.isArray(list) && list.length > 0) {
+          this.companies = list;
+          // Validate if currentCompany exists in list, else default to first
+          const exists = this.companies.some(c => c.id === this.currentCompany || c.project === this.currentCompany);
+          if (!exists) {
+            this.currentCompany = this.companies[0].id;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[DataEngine] Could not fetch /api/companies, using cached fallback:', e);
+    }
   }
 
   injectSelector() {
@@ -31,11 +51,19 @@ class PortalDataEngine {
     const existing = document.getElementById('company-selector-wrap');
     if (existing) existing.remove();
 
+    const t = (k) => (window.I18n ? window.I18n.t(k) : (k === 'company_label' ? 'Company:' : k));
+
+    const optionsHtml = this.companies.map(c => {
+      const label = c.display || c.name || c.id;
+      const isSelected = (c.id === this.currentCompany || c.project === this.currentCompany) ? 'selected' : '';
+      return `<option value="${c.id}" ${isSelected}>${label}</option>`;
+    }).join('');
+
     const selectorHtml = `
       <div id="company-selector-wrap" style="display:inline-flex;align-items:center;gap:8px;margin-right:12px;">
-        <span style="font-size:0.68rem;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">Empresa:</span>
-        <select id="company-selector" class="company-selector" onchange="document.dispatchEvent(new CustomEvent('changeCompany', {detail: {companyId: this.value}}))" style="padding:4px 10px;border-radius:6px;border:1px solid var(--border-2);background:var(--bg-surface-2);color:var(--text-1);font-size:0.78rem;font-weight:600;cursor:pointer;outline:none;">
-          ${this.companies.map(c => `<option value="${c.id}" ${c.id === this.currentCompany ? 'selected' : ''}>${c.name}</option>`).join('')}
+        <span style="font-size:0.68rem;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">🏢</span>
+        <select id="company-selector" class="company-selector" onchange="window.DataEngine.onSelectCompany(this.value)" style="padding:5px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:rgba(15,23,42,0.85);color:var(--text-1);font-size:0.78rem;font-weight:600;cursor:pointer;outline:none;max-width:260px;">
+          ${optionsHtml}
         </select>
       </div>
     `;
@@ -43,41 +71,37 @@ class PortalDataEngine {
     topbarRight.insertAdjacentHTML('afterbegin', selectorHtml);
   }
 
+  onSelectCompany(companyId) {
+    localStorage.setItem('portal_selected_company', companyId);
+    document.dispatchEvent(new CustomEvent('changeCompany', { detail: { companyId } }));
+  }
+
   async loadCompanyData(companyId) {
     this.currentCompany = companyId;
-    console.log(`[DataEngine] Switching to company: ${companyId}`);
+    localStorage.setItem('portal_selected_company', companyId);
+    console.log(`[DataEngine] Loading data for company: ${companyId}`);
     
+    // Show subtle loading state if elements exist
+    const noteEl = document.querySelector('.topbar-date');
+    const origDate = noteEl ? noteEl.innerText : '';
+    if (noteEl) noteEl.innerText = 'Syncing BQ...';
+
     try {
       let dataset = null;
 
-      // 1. Try Live API Endpoint first (Cloud Run / Local Server)
-      if (window.location.protocol.startsWith('http')) {
-        try {
-          const res = await fetch(`/api/data?tenant=${companyId}`);
-          if (res.ok) {
-            dataset = await res.json();
-            console.log(`[DataEngine] Received Live BigQuery dataset from API:`, dataset);
-          }
-        } catch (apiErr) {
-          console.warn('[DataEngine] API fetch failed, falling back to local JS data:', apiErr);
-        }
-      }
-
-      // 2. Fallback to bundled dataset if offline / static
-      if (!dataset) {
-        if (companyId === 'mhs' && typeof MONARCH_DATA !== 'undefined') {
-          dataset = MONARCH_DATA;
-        } else if (companyId === 'demo' && typeof DEMO_DATA !== 'undefined') {
-          dataset = DEMO_DATA;
-        } else if (typeof MONARCH_DATA !== 'undefined') {
-          dataset = MONARCH_DATA;
-        }
+      // 1. Fetch Live BigQuery dataset from FastAPI API Endpoint
+      const res = await fetch(`/api/data?tenant=${companyId}`);
+      if (res.ok) {
+        dataset = await res.json();
+        console.log(`[DataEngine] Received Live BigQuery dataset:`, dataset);
+      } else {
+        console.warn(`[DataEngine] API returned status ${res.status} for ${companyId}`);
       }
 
       if (dataset) {
         this.data = dataset;
         
-        // Sync selector value if present
+        // Sync selector value
         const sel = document.getElementById('company-selector');
         if (sel && sel.value !== companyId) {
           sel.value = companyId;
@@ -86,10 +110,16 @@ class PortalDataEngine {
         // Dispatch event to update all charts, tables, and KPIs
         document.dispatchEvent(new CustomEvent('dataLoaded', { detail: { data: this.data } }));
       } else {
-        console.error('[DataEngine] No dataset found for ID:', companyId);
+        console.error('[DataEngine] No dataset returned for ID:', companyId);
       }
     } catch (error) {
       console.error('[DataEngine] Error loading company data:', error);
+    } finally {
+      if (noteEl) {
+        const lang = window.I18n ? window.I18n.currentLang : 'en';
+        const now = new Date();
+        noteEl.innerText = now.toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
+      }
     }
   }
 
