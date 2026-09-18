@@ -274,7 +274,7 @@ def query_bigquery_live(tenant_id: str) -> Dict[str, Any]:
 
     client = bq_client or bigquery.Client()
 
-    # 1. Master KPI Query from Gold Fact Table
+    # 1. Master KPI Query from Gold Real-Time View
     master_query = f"""
     SELECT 
       COUNT(*) AS total_calls,
@@ -289,7 +289,7 @@ def query_bigquery_live(tenant_id: str) -> Dict[str, Any]:
       COUNTIF(is_lost_bookable = TRUE AND valuation_source = 'OPEN_ESTIMATE_SERVICETITAN') AS open_estimates_count,
       COALESCE(ROUND(AVG(customer_sentiment_score), 2), 0.15) AS avg_sentiment,
       COALESCE(ROUND(AVG(csr_handling_score), 2), 4.1) AS csr_handling_score
-    FROM `{project_id}.gold.fc_call_intelligence`;
+    FROM `{project_id}.gold.vw_call_intelligence`;
     """
 
     has_gold = False
@@ -336,13 +336,13 @@ def query_bigquery_live(tenant_id: str) -> Dict[str, Any]:
         except Exception:
             total_calls = 0
 
-    # 2. Root Causes Query (From Gold Fact)
+    # 2. Root Causes Query (From Gold Real-Time View)
     causes_query = f"""
     SELECT 
       COALESCE(lost_reason_category, 'No Availability / Capacity') AS reason,
       COUNT(*) AS count,
       ROUND(SUM(estimated_opportunity_usd), 2) AS impact
-    FROM `{project_id}.gold.fc_call_intelligence`
+    FROM `{project_id}.gold.vw_call_intelligence`
     WHERE is_lost_bookable = TRUE AND lost_reason_category IS NOT NULL
     GROUP BY lost_reason_category
     ORDER BY impact DESC
