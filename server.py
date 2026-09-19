@@ -48,12 +48,7 @@ COMPANIES_CACHE: Dict[str, Any] = {
     "map": {}
 }
 
-# BigQuery Client Initialization
-try:
-    bq_client = bigquery.Client()
-except Exception as e:
-    print(f"Warning: BigQuery Client init fallback: {e}")
-    bq_client = None
+
 
 
 def is_authorized_email(email: str) -> bool:
@@ -173,7 +168,7 @@ def load_companies_catalog() -> List[Dict[str, Any]]:
     ORDER BY company_id ASC;
     """
     try:
-        client = bq_client or bigquery.Client()
+        client = bigquery.Client(project="pph-central")
         query_job = client.query(query)
         results = list(query_job.result())
 
@@ -247,7 +242,7 @@ def query_bigquery_live(tenant_id: str) -> Dict[str, Any]:
     project_id = t_info.get("project", "shape-mhs-1")
     company_name = t_info.get("name", "Company")
 
-    client = bq_client or bigquery.Client()
+    client = bigquery.Client(project=project_id)
 
     # 1. Master KPI Query from Gold Real-Time View
     master_query = f"""
