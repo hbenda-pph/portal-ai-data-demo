@@ -7,7 +7,12 @@
 class PortalDataEngine {
   constructor() {
     this.currentCompany = localStorage.getItem('portal_selected_company') || 'shape-mhs-1';
-    this.companies = [];
+    try {
+      const cached = localStorage.getItem('portal_cached_companies');
+      this.companies = cached ? JSON.parse(cached) : [];
+    } catch (e) {
+      this.companies = [];
+    }
     this.data = null;
     
     // Listen for company changes
@@ -17,6 +22,9 @@ class PortalDataEngine {
   }
 
   async init() {
+    if (this.companies.length > 0) {
+      this.injectSelector();
+    }
     // 1. Fetch companies from API dynamically
     await this.fetchCompanies();
 
@@ -31,11 +39,12 @@ class PortalDataEngine {
         const list = await res.json();
         if (Array.isArray(list) && list.length > 0) {
           this.companies = list;
+          localStorage.setItem('portal_cached_companies', JSON.stringify(list));
           this.injectSelector();
         }
       }
     } catch (e) {
-      console.warn('[DataEngine] Using default companies list:', e);
+      console.warn('[DataEngine] Error fetching companies:', e);
     }
   }
 

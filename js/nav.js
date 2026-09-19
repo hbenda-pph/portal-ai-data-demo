@@ -160,6 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
     tb.className = 'topbar';  
     tb.innerHTML = buildTopbar(); 
     if (window.I18n) window.I18n.injectLanguageSelector();
+    if (window.DataEngine && typeof window.DataEngine.injectSelector === 'function') {
+      window.DataEngine.injectSelector();
+    }
     checkUserIdentity();
   }
 });
