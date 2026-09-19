@@ -208,6 +208,7 @@ def load_companies_catalog() -> List[Dict[str, Any]]:
       company_bigquery_status
     FROM `pph-central.settings.companies`
     WHERE company_project_id IS NOT NULL AND company_project_id != ''
+      AND company_bigquery_status IS TRUE
     ORDER BY company_id ASC;
     """
     try:
