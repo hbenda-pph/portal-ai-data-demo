@@ -224,6 +224,7 @@ def load_companies_catalog() -> List[Dict[str, Any]]:
             name = r["company_new_name"] or r["company_name"] or proj
             short_name = r["company_name"] or name
             state = r["company_state"] or ""
+            cid = str(r["company_id"])
             c_info = {
                 "id": proj,
                 "company_id": r["company_id"],
@@ -237,6 +238,9 @@ def load_companies_catalog() -> List[Dict[str, Any]]:
             }
             companies_list.append(c_info)
             companies_map[proj] = c_info
+            companies_map[cid] = c_info
+            companies_map[short_name.lower()] = c_info
+            companies_map[proj.replace("shape-", "")] = c_info
             
             if proj == "shape-mhs-1":
                 companies_map["mhs"] = c_info
@@ -252,17 +256,30 @@ def load_companies_catalog() -> List[Dict[str, Any]]:
     except Exception as e:
         print(f"Warning: query pph-central.settings.companies: {e}")
 
+    # Fallback initialization for master catalog map
+    if not COMPANIES_CACHE["map"]:
+        fallback_map = {}
+        for c in MASTER_COMPANIES_CATALOG:
+            fallback_map[c["project"]] = c
+            fallback_map[str(c["company_id"])] = c
+            fallback_map[c["id"]] = c
+            fallback_map[c["short_name"].lower()] = c
+        COMPANIES_CACHE["map"] = fallback_map
+
     return MASTER_COMPANIES_CATALOG
 
 
 def get_tenant_info(tenant: str) -> Dict[str, Any]:
     """Resolve tenant information from catalog."""
     catalog = load_companies_catalog()
+    t_clean = str(tenant).strip().lower() if tenant else "shape-mhs-1"
     cmap = COMPANIES_CACHE.get("map", {})
+    if t_clean in cmap:
+        return cmap[t_clean]
     if tenant in cmap:
         return cmap[tenant]
     for c in catalog:
-        if str(c.get("company_id")) == str(tenant) or c.get("id") == tenant or c.get("project") == tenant:
+        if str(c.get("company_id")) == str(tenant) or str(c.get("id")).lower() == t_clean or str(c.get("project")).lower() == t_clean:
             return c
     return cmap.get("shape-mhs-1", MASTER_COMPANIES_CATALOG[0])
 
